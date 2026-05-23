@@ -3,63 +3,129 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Romance Finder — Promoções por Gênero</title>
+  <title>Romance Finder — Promoções de Livros</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#0b0b0f;--surface:#131219;--surface2:#1a1825;--surface3:#221f2e;
       --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-      --accent:#c084fc;--green:#34d399;--yellow:#fbbf24;--red:#f87171;
+      --accent:#c084fc;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--pink:#f472b6;
       --text:#f1eef8;--text2:#b8afc8;--muted:#6b6180}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       background:radial-gradient(ellipse 70% 45% at 15% -5%,rgba(192,132,252,.13) 0%,transparent 55%),
                  radial-gradient(ellipse 55% 40% at 85% 105%,rgba(244,114,182,.10) 0%,transparent 55%)}
-    header{position:relative;z-index:1;text-align:center;padding:44px 20px 22px}
-    .logo-pill{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(192,132,252,.28);padding:5px 14px 5px 10px;border-radius:20px;margin-bottom:16px;background:rgba(192,132,252,.07)}
-    h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3.2rem);font-weight:700;line-height:1.12;background:linear-gradient(135deg,#f1eef8 20%,#c084fc 55%,#f472b6 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+
+    /* ── HEADER ── */
+    header{position:relative;z-index:1;text-align:center;padding:40px 20px 20px}
+    .logo-pill{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(192,132,252,.28);padding:5px 14px 5px 10px;border-radius:20px;margin-bottom:14px;background:rgba(192,132,252,.07)}
+    h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,3rem);font-weight:700;line-height:1.12;background:linear-gradient(135deg,#f1eef8 20%,#c084fc 55%,#f472b6 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
     .subtitle{font-size:14px;color:var(--text2);max-width:420px;margin:0 auto;line-height:1.65}
-    .genre-section{position:relative;z-index:1;max-width:920px;margin:28px auto 0;padding:0 18px}
-    .section-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;text-align:center}
-    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}
-    .genre-card{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:16px 12px 13px;cursor:pointer;transition:all .2s;text-align:center}
-    .genre-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
-    .genre-card.active{transform:translateY(-3px)}
-    .genre-icon{font-size:26px;margin-bottom:7px;display:block}
-    .genre-name{font-size:12.5px;font-weight:700;line-height:1.2}
-    .genre-sub{font-size:10px;color:var(--muted);margin-top:3px}
-    .sub-section{position:relative;z-index:1;max-width:920px;margin:14px auto 0;padding:0 18px;display:none}
+
+    /* ── SEARCH BAR ── */
+    .search-section{position:relative;z-index:1;max-width:660px;margin:22px auto 0;padding:0 18px}
+    .search-row{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid rgba(192,132,252,.25);border-radius:16px;padding:6px 6px 6px 18px;transition:border-color .2s,box-shadow .2s}
+    .search-row:focus-within{border-color:rgba(192,132,252,.6);box-shadow:0 0 0 3px rgba(192,132,252,.1),0 8px 32px rgba(0,0,0,.4)}
+    .search-row input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);padding:8px 0}
+    .search-row input::placeholder{color:var(--muted)}
+    .btn-search{background:linear-gradient(135deg,#c084fc,#f472b6);border:none;border-radius:11px;padding:11px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;white-space:nowrap}
+    .btn-search:hover{opacity:.85;transform:scale(.98)}
+    .btn-search:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .search-hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
+    .search-hint span{color:var(--accent);cursor:pointer}
+    .search-hint span:hover{text-decoration:underline}
+
+    /* ── GENRE SECTION ── */
+    .genre-section{position:relative;z-index:1;max-width:920px;margin:24px auto 0;padding:0 18px}
+    .section-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;text-align:center}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px}
+    .genre-card{background:var(--surface);border:2px solid var(--border);border-radius:13px;padding:14px 10px 12px;cursor:pointer;transition:all .2s;text-align:center}
+    .genre-card:hover,.genre-card.active{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
+    .genre-icon{font-size:23px;margin-bottom:6px;display:block}
+    .genre-name{font-size:12px;font-weight:700;line-height:1.2}
+    .genre-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+    /* ── SUBFILTERS + CONTROLS ── */
+    .sub-section{position:relative;z-index:1;max-width:920px;margin:12px auto 0;padding:0 18px;display:none}
     .sub-row{display:flex;gap:7px;flex-wrap:wrap}
     .sfchip{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
     .sfchip:hover,.sfchip.active{border-color:rgba(192,132,252,.45);background:rgba(192,132,252,.1);color:var(--accent)}
-    .controls{position:relative;z-index:1;max-width:920px;margin:12px auto 0;padding:0 18px;display:none;gap:8px;align-items:center;flex-wrap:wrap}
+    .controls{position:relative;z-index:1;max-width:920px;margin:10px auto 0;padding:0 18px;display:none;gap:8px;align-items:center;flex-wrap:wrap}
     .ctrl-label{font-size:12px;color:var(--muted)}
-    .sort-row{display:flex;gap:6px}
-    .sort-btn{font-size:11px;font-weight:500;padding:6px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
+    .sort-row{display:flex;gap:6px;flex-wrap:wrap}
+    .sort-btn{font-size:11px;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
     .sort-btn.active,.sort-btn:hover{border-color:rgba(192,132,252,.4);color:var(--accent);background:rgba(192,132,252,.08)}
-    main{position:relative;z-index:1;max-width:1160px;margin:28px auto 0;padding:0 18px 80px}
+    .ctrl-spacer{flex:1;min-width:10px}
+    /* Year filter */
+    .year-filter{display:flex;gap:6px;align-items:center}
+    .year-btn{font-size:11px;font-weight:500;padding:6px 11px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
+    .year-btn.active,.year-btn:hover{border-color:rgba(251,191,36,.4);color:var(--yellow);background:rgba(251,191,36,.07)}
+
+    /* ── WISHLIST TOAST ── */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:500;color:var(--text);z-index:999;transition:transform .3s ease;pointer-events:none;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    /* ── WISHLIST PANEL ── */
+    .wl-btn{position:fixed;top:18px;right:18px;z-index:50;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:9px 14px;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text);transition:all .2s}
+    .wl-btn:hover{border-color:rgba(244,114,182,.4);color:var(--pink)}
+    .wl-count{background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+    .wl-panel{position:fixed;top:0;right:-380px;width:360px;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:100;transition:right .3s ease;overflow-y:auto;padding:0 0 40px}
+    .wl-panel.open{right:0}
+    .wl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;display:none}
+    .wl-overlay.show{display:block}
+    .wl-header{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:1}
+    .wl-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
+    .wl-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px}
+    .wl-close:hover{color:var(--text);background:var(--surface2)}
+    .wl-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px}
+    .wl-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
+    .wl-cover{width:48px;height:72px;object-fit:cover;border-radius:6px;background:var(--surface2);flex-shrink:0}
+    .wl-cover-ph{width:48px;height:72px;border-radius:6px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .wl-info{flex:1;min-width:0}
+    .wl-item-title{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:3px}
+    .wl-item-author{font-size:11px;color:var(--muted);margin-bottom:6px}
+    .wl-item-price{font-size:14px;font-weight:700;color:var(--green)}
+    .wl-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 5px;flex-shrink:0}
+    .wl-remove:hover{color:var(--red)}
+
+    /* ── MAIN ── */
+    main{position:relative;z-index:1;max-width:1160px;margin:26px auto 0;padding:0 18px 100px}
     .status-bar{display:none;align-items:center;gap:9px;font-size:13px;color:var(--muted);margin-bottom:20px}
     .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1.3s infinite}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-    .ai-box{background:var(--surface);border:1px solid rgba(192,132,252,.18);border-radius:14px;padding:15px 20px;margin-bottom:20px;display:none}
+    .ai-box{background:var(--surface);border:1px solid rgba(192,132,252,.18);border-radius:14px;padding:14px 18px;margin-bottom:18px;display:none}
     .ai-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
     .ai-badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
     .ai-box p{font-size:13.5px;color:var(--text2);line-height:1.7}
-    .res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;display:none}
+    .res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
     .res-count{font-size:13px;color:var(--muted)}
     .res-count strong{color:var(--text)}
+
+    /* ── GRID ── */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-    .book-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;animation:fadeUp .38s ease both}
+
+    /* ── BOOK CARD ── */
+    .book-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;animation:fadeUp .38s ease both;position:relative}
     .book-card:hover{transform:translateY(-4px);border-color:rgba(192,132,252,.28);box-shadow:0 12px 36px rgba(0,0,0,.55);background:var(--surface2)}
+    .book-card.best-deal{border-color:rgba(52,211,153,.4)!important;box-shadow:0 0 0 1px rgba(52,211,153,.2),0 8px 32px rgba(52,211,153,.1)!important}
+    .best-deal-banner{background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(192,132,252,.1));border-bottom:1px solid rgba(52,211,153,.2);padding:7px 13px;font-size:11px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:6px;display:none}
+    .book-card.best-deal .best-deal-banner{display:flex}
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .card-top{display:flex}
+    .card-top{display:flex;position:relative}
+
+    /* WISHLIST HEART */
+    .heart-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.4);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;backdrop-filter:blur(4px);z-index:2}
+    .heart-btn:hover{background:rgba(244,114,182,.2);transform:scale(1.15)}
+    .heart-btn.saved{background:rgba(244,114,182,.25)}
+
     .cover-wrap{position:relative;flex-shrink:0;width:96px}
-    .book-cover{width:96px;height:144px;object-fit:cover;display:block;background:var(--surface2)}
-    .cover-ph{width:96px;height:144px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--surface2),var(--surface3));font-family:'Playfair Display',serif;font-style:italic;font-size:11px;color:var(--muted);text-align:center;padding:10px;line-height:1.4}
-    .badge-off{position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px}
-    .card-info{flex:1;padding:13px 13px 10px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
-    .book-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;line-height:1.3;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .book-cover{width:96px;height:144px;object-fit:cover;display:block;background:var(--surface2);cursor:pointer}
+    .cover-ph{width:96px;height:144px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--surface2),var(--surface3));font-family:'Playfair Display',serif;font-style:italic;font-size:11px;color:var(--muted);text-align:center;padding:10px;line-height:1.4;cursor:pointer}
+    .badge-off{position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;z-index:1}
+    .card-info{flex:1;padding:13px 36px 10px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
+    .book-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;line-height:1.3;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+    .book-title:hover{color:var(--accent)}
     .book-author{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .book-year{font-size:10.5px;font-weight:500}
     .verdict{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;width:fit-content}
@@ -67,6 +133,8 @@
     .v-good{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.22)}
     .v-avg{background:rgba(192,132,252,.12);color:#c084fc;border:1px solid rgba(192,132,252,.22)}
     .v-skip{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.22)}
+
+    /* COMPARATIVO */
     .comparativo{margin:0 12px 12px;background:var(--surface3);border:1px solid var(--border2);border-radius:12px;overflow:hidden}
     .comp-header{padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
     .comp-htitle{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -95,6 +163,34 @@
     .bar-wrap{padding:0 13px 10px}
     .bar-track{height:5px;background:var(--surface);border-radius:10px;overflow:hidden}
     .bar-fill{height:100%;border-radius:10px}
+
+    /* ── BOOK MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;animation:modalIn .25s ease}
+    @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+    .modal-top{display:flex;gap:16px;padding:20px;border-bottom:1px solid var(--border)}
+    .modal-cover{width:90px;height:135px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--surface2)}
+    .modal-cover-ph{width:90px;height:135px;border-radius:10px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+    .modal-meta{flex:1}
+    .modal-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;line-height:1.3;margin-bottom:6px}
+    .modal-author{font-size:13px;color:var(--text2);margin-bottom:8px}
+    .modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    .modal-tag{font-size:10px;padding:3px 9px;border-radius:10px;background:rgba(192,132,252,.12);color:var(--accent);border:1px solid rgba(192,132,252,.2)}
+    .modal-price-row{display:flex;align-items:center;gap:10px}
+    .modal-best-price{font-size:22px;font-weight:700;color:var(--green)}
+    .modal-disc{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
+    .modal-desc{padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.7;border-bottom:1px solid var(--border)}
+    .modal-stores{padding:16px 20px}
+    .modal-stores-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .modal-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--muted);cursor:pointer;font-size:13px}
+    .modal-close:hover{color:var(--text)}
+    .modal-wl{display:flex;align-items:center;gap:8px;margin-top:10px;padding:10px 20px 0;border-top:1px solid var(--border)}
+    .btn-add-wl{flex:1;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);border-radius:10px;padding:10px;color:var(--pink);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+    .btn-add-wl:hover{background:rgba(244,114,182,.2)}
+    .btn-add-wl.saved{background:rgba(244,114,182,.2);color:var(--pink)}
+
+    /* SKELETON */
     .skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     .empty{text-align:center;padding:70px 20px;display:none}
@@ -104,33 +200,72 @@
     #placeholder-state{text-align:center;padding:50px 20px}
     #placeholder-state p{font-size:15px;color:var(--text2);margin-bottom:8px}
     #placeholder-state span{font-size:13px;color:var(--muted)}
-    .err-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:none;font-size:13px;color:#fca5a5}
+    .err-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:none;font-size:13px;color:#fca5a5}
     .pagination{display:flex;justify-content:center;gap:10px;margin-top:40px}
     .btn-page{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 22px;color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;font-weight:500}
     .btn-page:hover{border-color:rgba(192,132,252,.4);color:var(--accent)}
     .btn-page:disabled{opacity:.3;cursor:not-allowed}
     footer{position:relative;z-index:1;text-align:center;padding:20px 18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
     .disclaimer{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:5px 11px;font-size:11px;color:var(--yellow);margin-top:6px}
-    @media(max-width:640px){h1{font-size:1.7rem}.grid{grid-template-columns:1fr}.genre-grid{grid-template-columns:repeat(3,1fr)}}
-    @media(min-width:900px){.grid{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}}
+    @media(max-width:640px){h1{font-size:1.6rem}.grid{grid-template-columns:1fr}.genre-grid{grid-template-columns:repeat(3,1fr)}.wl-panel{width:100%}.controls{flex-direction:column;align-items:flex-start}}
+    @media(min-width:900px){.grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
   </style>
 </head>
 <body>
 
+<!-- Wishlist button -->
+<button class="wl-btn" onclick="toggleWL()" id="wlBtn">❤️ Favoritos <span class="wl-count" id="wlCount">0</span></button>
+
+<!-- Wishlist panel -->
+<div class="wl-overlay" id="wlOverlay" onclick="toggleWL()"></div>
+<div class="wl-panel" id="wlPanel">
+  <div class="wl-header">
+    <span class="wl-title">❤️ Meus Favoritos</span>
+    <button class="wl-close" onclick="toggleWL()">✕</button>
+  </div>
+  <div id="wlContent"></div>
+</div>
+
+<!-- Book detail modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕ Fechar</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <header>
   <div class="logo-pill"><span style="font-size:14px">📚</span> Romance Finder</div>
-  <h1>Livros físicos por gênero</h1>
-  <p class="subtitle">Escolha o gênero, veja os livros físicos disponíveis e compare onde está mais barato.</p>
+  <h1>Encontre seu romance<br>pelo menor preço</h1>
+  <p class="subtitle">Busque por título, autor ou escolha um gênero e compare onde está mais barato.</p>
 </header>
 
+<!-- SEARCH BAR -->
+<div class="search-section">
+  <div class="search-row">
+    <span style="font-size:16px;opacity:.35;flex-shrink:0">🔍</span>
+    <input id="searchInput" type="text" placeholder="Buscar por título, autor ou série..." autocomplete="off"/>
+    <button class="btn-search" onclick="doSearch()">Buscar</button>
+  </div>
+  <p class="search-hint">
+    Busca rápida:
+    <span onclick="quickSearch('Colleen Hoover')">Colleen Hoover</span> ·
+    <span onclick="quickSearch('Sarah J Maas')">Sarah J. Maas</span> ·
+    <span onclick="quickSearch('Emily Henry')">Emily Henry</span> ·
+    <span onclick="quickSearch('dark romance')">Dark Romance</span>
+  </p>
+</div>
+
+<!-- GENRES -->
 <div class="genre-section">
-  <div class="section-label">Selecione o gênero</div>
+  <div class="section-label">— ou explore por gênero —</div>
   <div class="genre-grid" id="genreGrid"></div>
 </div>
 
-<div class="sub-section" id="subSection">
-  <div class="sub-row" id="subRow"></div>
-</div>
+<div class="sub-section" id="subSection"><div class="sub-row" id="subRow"></div></div>
 
 <div class="controls" id="controls">
   <span class="ctrl-label">Ordenar:</span>
@@ -139,28 +274,32 @@
     <button class="sort-btn" id="sortPrice"    onclick="sortBy('price')">💰 Menor preço</button>
     <button class="sort-btn" id="sortNew"      onclick="sortBy('new')">🆕 Mais novos</button>
   </div>
+  <div class="ctrl-spacer"></div>
+  <div class="year-filter">
+    <span class="ctrl-label">Ano:</span>
+    <button class="year-btn active" id="yearAll"  onclick="setYear(0,this)">Todos</button>
+    <button class="year-btn" id="year2020"        onclick="setYear(2020,this)">2020+</button>
+    <button class="year-btn" id="year2022"        onclick="setYear(2022,this)">2022+</button>
+    <button class="year-btn" id="year2024"        onclick="setYear(2024,this)">2024+</button>
+  </div>
 </div>
 
 <main>
   <div class="status-bar" id="statusBar"><div class="pulse"></div><span id="statusText">Buscando...</span></div>
   <div class="err-box" id="errBox"></div>
   <div class="ai-box" id="aiBox">
-    <div class="ai-head"><span style="font-size:15px">✨</span><span class="ai-badge">Análise do gênero — IA</span></div>
+    <div class="ai-head"><span style="font-size:15px">✨</span><span class="ai-badge">Análise IA</span></div>
     <p id="aiText"></p>
   </div>
-  <div class="res-header" id="resHeader">
+  <div class="res-header" id="resHeader" style="display:none">
     <span class="res-count" id="resCount"></span>
   </div>
   <div id="placeholder-state">
-    <p>👆 Escolha um gênero acima</p>
-    <span>Os livros físicos com melhores promoções aparecerão aqui</span>
+    <p>🔍 Busque por título ou 👆 escolha um gênero</p>
+    <span>Os livros com melhores promoções aparecerão aqui</span>
   </div>
   <div class="grid" id="grid"></div>
-  <div class="empty" id="emptyState">
-    <span class="empty-icon">📭</span>
-    <h2>Nenhum resultado</h2>
-    <p>Tente outro filtro ou gênero.</p>
-  </div>
+  <div class="empty" id="emptyState"><span class="empty-icon">📭</span><h2>Nenhum resultado</h2><p>Tente outro termo ou gênero.</p></div>
   <div class="pagination" id="pagination" style="display:none">
     <button class="btn-page" id="btnPrev" onclick="prevPage()">← Anterior</button>
     <button class="btn-page" id="btnNext" onclick="nextPage()">Próxima →</button>
@@ -169,174 +308,101 @@
 
 <footer>
   Romance Finder · Livros novos · Open Library & Google Books
-  <br><span class="disclaimer">⚠️ Preços marcados * são estimativas baseadas em descontos típicos — clique para confirmar na loja</span>
+  <br><span class="disclaimer">⚠️ Preços * são estimativas de descontos típicos por loja — clique para confirmar</span>
 </footer>
 
 <script>
-/* ══ GÊNEROS
-   olSubject : subject da Open Library (https://openlibrary.org/subjects/X.json)
-   olQuery   : fallback q= para Open Library search
-   gbQuery   : query para Google Books (sem subject:, só keywords)
-══ */
-const GENRES = [
-  { id:'contemporaneo', name:'Contemporâneo', icon:'💕', sub:'Histórias do dia a dia',
-    color:'#f472b6', bg:'rgba(244,114,182,.1)', border:'rgba(244,114,182,.4)',
-    olSubject:'romance', gbQuery:'contemporary romance',
-    subs:[
-      {label:'Enemies to lovers', olQ:'enemies to lovers romance', gbQ:'enemies to lovers romance'},
-      {label:'Second chance',     olQ:'second chance romance',     gbQ:'second chance romance novel'},
-      {label:'Office romance',    olQ:'office romance',            gbQ:'office romance novel'},
-      {label:'Small town',        olQ:'small town romance',        gbQ:'small town romance novel'},
-      {label:'Friends to lovers', olQ:'friends to lovers',         gbQ:'friends to lovers romance'},
-      {label:'Comédia romântica', olQ:'romantic comedy',           gbQ:'romantic comedy novel'},
-    ]},
-  { id:'booktok', name:'BookTok', icon:'📱', sub:'Viral nas redes',
-    color:'#e879f9', bg:'rgba(232,121,249,.1)', border:'rgba(232,121,249,.4)',
-    olSubject:'romance', gbQuery:'bestseller romance 2023 2024',
-    subs:[
-      {label:'Colleen Hoover',      olQ:'Colleen Hoover',       gbQ:'Colleen Hoover novel'},
-      {label:'Emily Henry',         olQ:'Emily Henry romance',  gbQ:'Emily Henry romance novel'},
-      {label:'Ana Huang',           olQ:'Ana Huang',            gbQ:'Ana Huang romance novel'},
-      {label:'Ali Hazelwood',       olQ:'Ali Hazelwood',        gbQ:'Ali Hazelwood romance'},
-      {label:'Talia Hibbert',       olQ:'Talia Hibbert',        gbQ:'Talia Hibbert romance novel'},
-      {label:'Helen Hoang',         olQ:'Helen Hoang',          gbQ:'Helen Hoang romance novel'},
-    ]},
-  { id:'dark', name:'Dark Romance', icon:'🌑', sub:'Intenso e emocionante',
-    color:'#a78bfa', bg:'rgba(167,139,250,.1)', border:'rgba(167,139,250,.4)',
-    olSubject:'dark_romance', gbQuery:'dark romance novel',
-    subs:[
-      {label:'Mafia romance',     olQ:'mafia romance',       gbQ:'mafia romance novel'},
-      {label:'Forbidden',         olQ:'forbidden romance',   gbQ:'forbidden romance novel'},
-      {label:'Antihero',          olQ:'antihero romance',    gbQ:'antihero dark romance'},
-      {label:'Age gap',           olQ:'age gap romance',     gbQ:'age gap romance novel'},
-      {label:'Captive romance',   olQ:'captive romance',     gbQ:'captive romance novel'},
-      {label:'Bully romance',     olQ:'bully romance',       gbQ:'bully romance novel'},
-    ]},
-  { id:'historico', name:'Histórico', icon:'🏰', sub:'Regência & Vitoriano',
-    color:'#fbbf24', bg:'rgba(251,191,36,.1)', border:'rgba(251,191,36,.4)',
-    olSubject:'historical_romance', gbQuery:'historical romance novel',
-    subs:[
-      {label:'Regência',   olQ:'regency romance',         gbQ:'regency romance novel'},
-      {label:'Vitoriano',  olQ:'victorian romance',       gbQ:'victorian romance novel'},
-      {label:'Medieval',   olQ:'medieval romance',        gbQ:'medieval romance novel'},
-      {label:'Escocês',    olQ:'scottish romance',        gbQ:'scottish highland romance'},
-      {label:'Bridgerton', olQ:'Bridgerton Julia Quinn',  gbQ:'Bridgerton Julia Quinn'},
-    ]},
-  { id:'fantasia', name:'Fantasia', icon:'🔮', sub:'Magia & mundos mágicos',
-    color:'#34d399', bg:'rgba(52,211,153,.1)', border:'rgba(52,211,153,.4)',
-    olSubject:'fantasy_romance', gbQuery:'fantasy romance novel',
-    subs:[
-      {label:'ACOTAR',        olQ:'A Court of Thorns and Roses', gbQ:'A Court of Thorns and Roses Sarah Maas'},
-      {label:'Sarah J. Maas', olQ:'Sarah J Maas',                gbQ:'Sarah J Maas romance fantasy'},
-      {label:'Romantasy',     olQ:'romantasy',                   gbQ:'romantasy fantasy romance'},
-      {label:'Fae romance',   olQ:'fae romance',                 gbQ:'fae fantasy romance novel'},
-      {label:'Dragon',        olQ:'dragon romance',              gbQ:'dragon romance fantasy novel'},
-    ]},
-  { id:'newadult', name:'New Adult', icon:'🎓', sub:'College & jovens adultos',
-    color:'#60a5fa', bg:'rgba(96,165,250,.1)', border:'rgba(96,165,250,.4)',
-    olSubject:'new_adult_fiction', gbQuery:'new adult college romance novel',
-    subs:[
-      {label:'College',         olQ:'college romance',         gbQ:'college romance novel'},
-      {label:'Sports romance',  olQ:'sports romance',          gbQ:'sports athlete romance novel'},
-      {label:'Campus',          olQ:'campus romance',          gbQ:'campus romance novel'},
-      {label:'Roommate',        olQ:'roommate romance',        gbQ:'roommate romance novel'},
-      {label:'Music romance',   olQ:'musician romance',        gbQ:'musician rockstar romance novel'},
-    ]},
-  { id:'suspense', name:'Suspense', icon:'🕵️', sub:'Mistério & thriller',
-    color:'#f87171', bg:'rgba(248,113,113,.1)', border:'rgba(248,113,113,.4)',
-    olSubject:'romantic_suspense', gbQuery:'romantic suspense thriller novel',
-    subs:[
-      {label:'Thriller romântico', olQ:'romantic thriller',        gbQ:'romantic thriller suspense'},
-      {label:'Mystery romance',    olQ:'mystery romance',          gbQ:'mystery romance novel'},
-      {label:'FBI romance',        olQ:'FBI romance',              gbQ:'FBI agent romance novel'},
-      {label:'Assassin',           olQ:'assassin romance',         gbQ:'assassin romance thriller'},
-      {label:'Bodyguard',          olQ:'bodyguard romance',        gbQ:'bodyguard romance novel'},
-    ]},
-  { id:'paranormal', name:'Paranormal', icon:'🧛', sub:'Vampiros & sobrenatural',
-    color:'#818cf8', bg:'rgba(129,140,248,.1)', border:'rgba(129,140,248,.4)',
-    olSubject:'paranormal_romance', gbQuery:'paranormal romance novel',
-    subs:[
-      {label:'Vampiros',   olQ:'vampire romance',   gbQ:'vampire romance novel'},
-      {label:'Lobisomens', olQ:'werewolf romance',  gbQ:'werewolf shifter romance'},
-      {label:'Fae',        olQ:'fae romance',       gbQ:'fae paranormal romance'},
-      {label:'Bruxas',     olQ:'witch romance',     gbQ:'witch paranormal romance'},
-      {label:'Demônios',   olQ:'demon romance',     gbQ:'demon romance paranormal'},
-    ]},
-  { id:'nacional', name:'Romance BR', icon:'🇧🇷', sub:'Autores brasileiros',
-    color:'#4ade80', bg:'rgba(74,222,128,.1)', border:'rgba(74,222,128,.4)',
-    olSubject:'romance', gbQuery:'romance livro portugues brasil',
-    subs:[
-      {label:'Contemporâneo BR', olQ:'romance contemporaneo',  gbQ:'romance contemporaneo brasil livro'},
-      {label:'Suspense BR',      olQ:'suspense romantico',     gbQ:'suspense romantico brasileiro'},
-      {label:'Fantasia BR',      olQ:'fantasia romantica',     gbQ:'fantasia romantica brasileira livro'},
-      {label:'New Adult BR',     olQ:'romance universitario',  gbQ:'romance universitario brasileiro'},
-    ]},
+/* ══ GENRES ══ */
+const GENRES=[
+  {id:'contemporaneo',name:'Contemporâneo',icon:'💕',sub:'Dia a dia',color:'#f472b6',bg:'rgba(244,114,182,.1)',border:'rgba(244,114,182,.4)',olSubject:'romance',gbQuery:'contemporary romance',subs:[{l:'Enemies to lovers',q:'enemies to lovers romance'},{l:'Second chance',q:'second chance romance'},{l:'Office romance',q:'office romance novel'},{l:'Small town',q:'small town romance'},{l:'Friends to lovers',q:'friends to lovers romance'},{l:'Comédia romântica',q:'romantic comedy novel'}]},
+  {id:'booktok',name:'BookTok',icon:'📱',sub:'Viral',color:'#e879f9',bg:'rgba(232,121,249,.1)',border:'rgba(232,121,249,.4)',olSubject:'romance',gbQuery:'bestseller romance 2023 2024',subs:[{l:'Colleen Hoover',q:'Colleen Hoover novel'},{l:'Emily Henry',q:'Emily Henry romance'},{l:'Ana Huang',q:'Ana Huang romance'},{l:'Ali Hazelwood',q:'Ali Hazelwood romance'},{l:'Talia Hibbert',q:'Talia Hibbert romance'},{l:'Helen Hoang',q:'Helen Hoang romance'}]},
+  {id:'dark',name:'Dark Romance',icon:'🌑',sub:'Intenso',color:'#a78bfa',bg:'rgba(167,139,250,.1)',border:'rgba(167,139,250,.4)',olSubject:'dark_romance',gbQuery:'dark romance novel',subs:[{l:'Mafia',q:'mafia romance novel'},{l:'Forbidden',q:'forbidden romance novel'},{l:'Antihero',q:'antihero dark romance'},{l:'Age gap',q:'age gap romance novel'},{l:'Captive',q:'captive romance novel'},{l:'Bully',q:'bully romance novel'}]},
+  {id:'historico',name:'Histórico',icon:'🏰',sub:'Regência',color:'#fbbf24',bg:'rgba(251,191,36,.1)',border:'rgba(251,191,36,.4)',olSubject:'historical_romance',gbQuery:'historical romance novel',subs:[{l:'Regência',q:'regency romance novel'},{l:'Vitoriano',q:'victorian romance novel'},{l:'Medieval',q:'medieval romance novel'},{l:'Escocês',q:'scottish highland romance'},{l:'Bridgerton',q:'Bridgerton Julia Quinn'}]},
+  {id:'fantasia',name:'Fantasia',icon:'🔮',sub:'Magia',color:'#34d399',bg:'rgba(52,211,153,.1)',border:'rgba(52,211,153,.4)',olSubject:'fantasy_romance',gbQuery:'fantasy romance novel',subs:[{l:'ACOTAR',q:'A Court of Thorns and Roses'},{l:'Sarah J. Maas',q:'Sarah J Maas romance'},{l:'Romantasy',q:'romantasy fantasy romance'},{l:'Fae',q:'fae fantasy romance'},{l:'Dragon',q:'dragon romance fantasy'}]},
+  {id:'newadult',name:'New Adult',icon:'🎓',sub:'College',color:'#60a5fa',bg:'rgba(96,165,250,.1)',border:'rgba(96,165,250,.4)',olSubject:'new_adult_fiction',gbQuery:'new adult college romance novel',subs:[{l:'College',q:'college romance novel'},{l:'Sports',q:'sports athlete romance'},{l:'Campus',q:'campus romance novel'},{l:'Roommate',q:'roommate romance novel'},{l:'Music',q:'musician rockstar romance'}]},
+  {id:'suspense',name:'Suspense',icon:'🕵️',sub:'Thriller',color:'#f87171',bg:'rgba(248,113,113,.1)',border:'rgba(248,113,113,.4)',olSubject:'romantic_suspense',gbQuery:'romantic suspense thriller',subs:[{l:'Thriller',q:'romantic thriller suspense'},{l:'Mystery',q:'mystery romance novel'},{l:'FBI',q:'FBI agent romance novel'},{l:'Assassin',q:'assassin romance thriller'},{l:'Bodyguard',q:'bodyguard romance novel'}]},
+  {id:'paranormal',name:'Paranormal',icon:'🧛',sub:'Sobrenatural',color:'#818cf8',bg:'rgba(129,140,248,.1)',border:'rgba(129,140,248,.4)',olSubject:'paranormal_romance',gbQuery:'paranormal romance novel',subs:[{l:'Vampiros',q:'vampire romance novel'},{l:'Lobisomens',q:'werewolf shifter romance'},{l:'Fae',q:'fae paranormal romance'},{l:'Bruxas',q:'witch paranormal romance'},{l:'Demônios',q:'demon romance paranormal'}]},
+  {id:'nacional',name:'Romance BR',icon:'🇧🇷',sub:'Brasileiros',color:'#4ade80',bg:'rgba(74,222,128,.1)',border:'rgba(74,222,128,.4)',olSubject:'romance',gbQuery:'romance livro portugues brasil',subs:[{l:'Contemporâneo BR',q:'romance contemporaneo brasileiro'},{l:'Suspense BR',q:'suspense romantico brasileiro'},{l:'Fantasia BR',q:'fantasia romantica brasileira'},{l:'New Adult BR',q:'romance universitario brasileiro'}]},
 ];
 
-/* ══ STORES — somente livros NOVOS ══ */
-const STORES = [
-  // Amazon: filtro condição=Novo (p_n_condition-type:6461716011) + livros + menor preço
-  {id:'amazon',  name:'Amazon',      color:'#fbbf24', disc:.28, fn:(t,a)=>`https://www.amazon.com.br/s?k=${eu(t+' '+a)}&i=stripbooks&rh=p_n_condition-type%3A6461716011&s=price-asc-rank`},
-  // Americanas: busca livros novos ordenado por menor preço
-  {id:'ameri',   name:'Americanas',  color:'#f87171', disc:.22, fn:(t)=>`https://www.americanas.com.br/busca/${eu(t)}?sortBy=priceAsc&condition=new`},
-  // Saraiva: todos os resultados são livros novos
-  {id:'saraiva', name:'Saraiva',     color:'#60a5fa', disc:.18, fn:(t)=>`https://www.saraiva.com.br/pesquisa/?q=${eu(t)}`},
-  // Magalu: categoria livros novos
-  {id:'magalu',  name:'Magalu',      color:'#818cf8', disc:.20, fn:(t)=>`https://www.magazineluiza.com.br/busca/${eu(t)}/?filters=category---LI`},
-  // Travessa: livraria especializada, só livros novos
-  {id:'travessa',name:'Travessa',    color:'#a78bfa', disc:.15, fn:(t)=>`https://www.travessa.com.br/busca?q=${eu(t)}&tipo=livros&ordenar=preco_asc`},
+/* ══ STORES ══ */
+const STORES=[
+  {id:'amazon',  name:'Amazon',     color:'#fbbf24',disc:.28,fn:(t,a)=>`https://www.amazon.com.br/s?k=${eu(t+' '+a)}&i=stripbooks&rh=p_n_condition-type%3A6461716011&s=price-asc-rank`},
+  {id:'ameri',   name:'Americanas', color:'#f87171',disc:.22,fn:(t)=>`https://www.americanas.com.br/busca/${eu(t)}?sortBy=priceAsc&condition=new`},
+  {id:'saraiva', name:'Saraiva',    color:'#60a5fa',disc:.18,fn:(t)=>`https://www.saraiva.com.br/pesquisa/?q=${eu(t)}`},
+  {id:'magalu',  name:'Magalu',     color:'#818cf8',disc:.20,fn:(t)=>`https://www.magazineluiza.com.br/busca/${eu(t)}/?filters=category---LI`},
+  {id:'travessa',name:'Travessa',   color:'#a78bfa',disc:.15,fn:(t)=>`https://www.travessa.com.br/busca?q=${eu(t)}&tipo=livros&ordenar=preco_asc`},
 ];
 
 /* ══ STATE ══ */
-let allBooks=[], currentPage=0, totalResults=0;
-let activeGenre=null, activeOlQ='', activeGbQ='', isLoading=false, currentSort='discount';
+let allBooks=[],currentPage=0,totalResults=0;
+let activeGenre=null,activeSubQ='',isLoading=false,currentSort='discount',yearFilter=0;
+let wishlist=JSON.parse(localStorage.getItem('rf_wishlist')||'[]');
 const PAGE=20;
 
-/* ══ BUILD GENRE CARDS ══ */
-GENRES.forEach(g=>{
-  const c=document.createElement('div');
-  c.className='genre-card'; c.id='gc-'+g.id;
-  c.innerHTML=`<span class="genre-icon">${g.icon}</span>
-    <div class="genre-name" style="color:${g.color}">${g.name}</div>
-    <div class="genre-sub">${g.sub}</div>`;
-  c.onclick=()=>selectGenre(g);
-  document.getElementById('genreGrid').appendChild(c);
-});
+/* ══ INIT ══ */
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+buildGenreGrid();
+updateWLCount();
+
+function buildGenreGrid(){
+  GENRES.forEach(g=>{
+    const c=document.createElement('div');
+    c.className='genre-card';c.id='gc-'+g.id;
+    c.innerHTML=`<span class="genre-icon">${g.icon}</span><div class="genre-name" style="color:${g.color}">${g.name}</div><div class="genre-sub">${g.sub}</div>`;
+    c.onclick=()=>selectGenre(g);
+    document.getElementById('genreGrid').appendChild(c);
+  });
+}
+
+/* ══ SEARCH BY TITLE ══ */
+function doSearch(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q) return;
+  activeGenre=null; activeSubQ=q; currentPage=0;
+  document.querySelectorAll('.genre-card').forEach(c=>{c.style.borderColor='';c.style.background='';c.classList.remove('active')});
+  document.getElementById('subSection').style.display='none';
+  document.getElementById('controls').style.display='flex';
+  doFetch(null, q, 0, q);
+}
+function quickSearch(q){document.getElementById('searchInput').value=q;doSearch()}
 
 /* ══ SELECT GENRE ══ */
 function selectGenre(g){
+  document.getElementById('searchInput').value='';
   document.querySelectorAll('.genre-card').forEach(c=>{c.style.borderColor='';c.style.background='';c.classList.remove('active')});
   const card=document.getElementById('gc-'+g.id);
-  card.style.borderColor=g.border; card.style.background=g.bg; card.classList.add('active');
-
-  activeGenre=g; activeOlQ=''; activeGbQ=''; currentPage=0;
-
+  card.style.borderColor=g.border;card.style.background=g.bg;card.classList.add('active');
+  activeGenre=g;activeSubQ='';currentPage=0;
   const row=document.getElementById('subRow');
   row.innerHTML=`<div class="sfchip active" onclick="resetSub(this)">Todos</div>`
-    +g.subs.map((s,i)=>`<div class="sfchip" data-i="${i}" onclick="setSub(${i},this)">${s.label}</div>`).join('');
+    +g.subs.map((s,i)=>`<div class="sfchip" onclick="setSub('${s.q.replace(/'/g,"\\'")}',this)">${s.l}</div>`).join('');
   document.getElementById('subSection').style.display='block';
   document.getElementById('controls').style.display='flex';
-
-  doFetch(g.olSubject, g.gbQuery, 0);
+  doFetch(g.olSubject,g.gbQuery,0);
 }
-
 function resetSub(el){
   document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active'); activeOlQ=''; activeGbQ=''; currentPage=0;
-  doFetch(activeGenre.olSubject, activeGenre.gbQuery, 0);
+  el.classList.add('active');activeSubQ='';currentPage=0;
+  doFetch(activeGenre.olSubject,activeGenre.gbQuery,0);
 }
-function setSub(i,el){
+function setSub(q,el){
   document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  const s=activeGenre.subs[i];
-  activeOlQ=s.olQ; activeGbQ=s.gbQ; currentPage=0;
-  doFetch(null, s.gbQ, 0, s.olQ);
+  el.classList.add('active');activeSubQ=q;currentPage=0;
+  doFetch(null,q,0,q);
 }
 
-/* ══ FETCH (Open Library primary + Google Books supplement) ══ */
-async function doFetch(olSubject, gbQuery, page, olQuery){
-  if(isLoading) return; isLoading=true;
+/* ══ YEAR FILTER ══ */
+function setYear(y,el){
+  yearFilter=y;
+  document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if(allBooks.length) renderBooks(currentSort);
+}
 
+/* ══ FETCH ══ */
+async function doFetch(olSubject,gbQuery,page,olQuery){
+  if(isLoading) return;isLoading=true;
   document.getElementById('placeholder-state').style.display='none';
   document.getElementById('emptyState').style.display='none';
   document.getElementById('aiBox').style.display='none';
@@ -344,157 +410,114 @@ async function doFetch(olSubject, gbQuery, page, olQuery){
   document.getElementById('resHeader').style.display='none';
   document.getElementById('pagination').style.display='none';
   document.getElementById('statusBar').style.display='flex';
-
   const grid=document.getElementById('grid');
   grid.innerHTML='';
-  // skeletons
   for(let i=0;i<6;i++){
     const sk=document.createElement('div');
     sk.style.cssText='border-radius:16px;overflow:hidden;background:var(--surface)';
-    sk.innerHTML=`<div style="display:flex">
-      <div class="skeleton" style="width:96px;height:144px;flex-shrink:0"></div>
+    sk.innerHTML=`<div style="display:flex"><div class="skeleton" style="width:96px;height:144px;flex-shrink:0"></div>
       <div style="flex:1;padding:13px;display:flex;flex-direction:column;gap:9px">
         <div class="skeleton" style="height:13px;width:70%;border-radius:5px"></div>
         <div class="skeleton" style="height:11px;width:45%;border-radius:5px"></div>
-        <div class="skeleton" style="height:11px;width:30%;border-radius:5px"></div>
-      </div></div>
+        <div class="skeleton" style="height:11px;width:30%;border-radius:5px"></div></div></div>
       <div style="margin:0 12px 12px;padding:12px;background:var(--surface3);border-radius:12px">
         <div class="skeleton" style="height:9px;width:38%;border-radius:4px;margin-bottom:10px"></div>
         <div class="skeleton" style="height:22px;width:50%;border-radius:6px;margin-bottom:10px"></div>
-        ${[0,1,2,3].map(()=>`<div class="skeleton" style="height:30px;border-radius:8px;margin-bottom:5px"></div>`).join('')}
-      </div>`;
+        ${[0,1,2,3].map(()=>`<div class="skeleton" style="height:30px;border-radius:8px;margin-bottom:5px"></div>`).join('')}</div>`;
     grid.appendChild(sk);
   }
-
-  allBooks=[];
-  const seen=new Set();
-  let errMsg='';
-
+  allBooks=[];const seen=new Set();let errMsg='';
   try{
     const offset=page*PAGE;
-
-    /* ── 1. Open Library search (primary, physical books) ── */
-    document.getElementById('statusText').textContent='Buscando no Open Library...';
-    const olSearchQ = olQuery || (olSubject ? `subject:"${olSubject}" romance` : activeGenre?.gbQuery || 'romance');
-    const olURL = `https://openlibrary.org/search.json?q=${encodeURIComponent(olSearchQ)}&fields=key,title,author_name,first_publish_year,cover_i,number_of_pages_median,subject&limit=${PAGE}&offset=${offset}`;
-
-    const olRes  = await fetch(olURL);
-    if(!olRes.ok) throw new Error(`Open Library: HTTP ${olRes.status}`);
-    const olData = await olRes.json();
-    totalResults = olData.numFound || 0;
-
+    /* Open Library */
+    document.getElementById('statusText').textContent='Buscando livros...';
+    const olQ=olQuery||(olSubject?`subject:"${olSubject}" romance`:activeGenre?.gbQuery||'romance');
+    const olURL=`https://openlibrary.org/search.json?q=${encodeURIComponent(olQ)}&fields=key,title,author_name,first_publish_year,cover_i,number_of_pages_median&limit=${PAGE}&offset=${offset}`;
+    const olRes=await fetch(olURL);
+    if(!olRes.ok) throw new Error(`Open Library HTTP ${olRes.status}`);
+    const olData=await olRes.json();
+    totalResults=olData.numFound||0;
     (olData.docs||[]).forEach(b=>{
       const title=(b.title||'').trim();
       if(!title||seen.has(title.toLowerCase())) return;
       seen.add(title.toLowerCase());
       const pages=b.number_of_pages_median||0;
       const estCover=pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90;
-      const storePrices=buildStorePrices(estCover, null, title, b.author_name?.[0]||'');
-      const best=storePrices[0];
-      allBooks.push({
-        title, year:b.first_publish_year||'',
-        author:b.author_name?b.author_name.slice(0,2).join(', '):'Autor desconhecido',
-        cover:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:'',
-        refPrice:estCover, hasPriceData:false,
-        storePrices, bestPrice:best.price,
-        discount:Math.round((1-best.price/estCover)*100),
-        economy:Math.round((estCover-best.price)*100)/100,
-        genreColor:activeGenre?.color||'#c084fc',
-      });
+      const sp=buildSP(estCover,null,title,b.author_name?.[0]||'');
+      allBooks.push({title,year:b.first_publish_year||'',author:b.author_name?b.author_name.slice(0,2).join(', '):'Autor desconhecido',cover:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:'',refPrice:estCover,hasPriceData:false,storePrices:sp,bestPrice:sp[0].price,discount:Math.round((1-sp[0].price/estCover)*100),economy:Math.round((estCover-sp[0].price)*100)/100,genreColor:activeGenre?.color||'#c084fc',description:''});
     });
-
-    /* ── 2. Google Books supplement (tries to get real prices) ── */
-    document.getElementById('statusText').textContent='Verificando preços no Google Books...';
+    /* Google Books supplement */
     try{
-      const gbURL=`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(gbQuery)}&printType=books&startIndex=${offset}&maxResults=12&orderBy=relevance`;
+      const gbURL=`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(gbQuery)}&printType=books&startIndex=${offset}&maxResults=10&orderBy=relevance`;
       const gbRes=await fetch(gbURL);
       if(gbRes.ok){
         const gbData=await gbRes.json();
         (gbData.items||[]).forEach(item=>{
-          const info=item.volumeInfo||{}, sale=item.saleInfo||{};
-          /* pula ebooks */
+          const info=item.volumeInfo||{},sale=item.saleInfo||{};
           if(sale.isEbook===true) return;
           const title=(info.title||'').trim();
           if(!title||seen.has(title.toLowerCase())) return;
           seen.add(title.toLowerCase());
-
           const toBRL=(v,cur)=>cur==='BRL'?v:v*5.15;
-          let coverPrice=null, onlinePrice=null;
-          if(sale.listPrice?.amount)   coverPrice  =Math.round(toBRL(sale.listPrice.amount,  sale.listPrice.currencyCode)*100)/100;
-          if(sale.retailPrice?.amount && sale.isEbook!==true)
-                                       onlinePrice =Math.round(toBRL(sale.retailPrice.amount,sale.retailPrice.currencyCode)*100)/100;
-
+          let cp=null,op=null;
+          if(sale.listPrice?.amount)   cp=Math.round(toBRL(sale.listPrice.amount,  sale.listPrice.currencyCode)*100)/100;
+          if(sale.retailPrice?.amount&&!sale.isEbook) op=Math.round(toBRL(sale.retailPrice.amount,sale.retailPrice.currencyCode)*100)/100;
           const pages=info.pageCount||0;
-          const estCover=coverPrice||(pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90);
-          const refPrice=estCover;
-          const storePrices=buildStorePrices(refPrice, onlinePrice, title, info.authors?.[0]||'');
-          const best=storePrices[0];
-
-          allBooks.push({
-            title, year:info.publishedDate?info.publishedDate.split('-')[0]:'',
-            author:info.authors?info.authors.slice(0,2).join(', '):'Autor desconhecido',
-            cover:(info.imageLinks?.thumbnail||'').replace('http://','https://'),
-            refPrice, hasPriceData:!!(coverPrice||onlinePrice),
-            storePrices, bestPrice:best.price,
-            discount:Math.round((1-best.price/refPrice)*100),
-            economy:Math.round((refPrice-best.price)*100)/100,
-            genreColor:activeGenre?.color||'#c084fc',
-          });
+          const refPrice=cp||(pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90);
+          const sp=buildSP(refPrice,op,title,info.authors?.[0]||'');
+          allBooks.push({title,year:info.publishedDate?info.publishedDate.split('-')[0]:'',author:info.authors?info.authors.slice(0,2).join(', '):'Autor desconhecido',cover:(info.imageLinks?.thumbnail||'').replace('http://','https://'),refPrice,hasPriceData:!!(cp||op),storePrices:sp,bestPrice:sp[0].price,discount:Math.round((1-sp[0].price/refPrice)*100),economy:Math.round((refPrice-sp[0].price)*100)/100,genreColor:activeGenre?.color||'#c084fc',description:info.description||''});
         });
       }
-    }catch(gbErr){ /* Google Books falhou — OK, usamos só OL */ }
-
+    }catch(e){}
   }catch(err){
     errMsg=err.message;
-    console.error('Fetch error:',err);
-    const eb=document.getElementById('errBox');
-    eb.textContent='⚠️ Erro ao buscar: '+errMsg+' — Recarregue a página ou tente outro gênero.';
-    eb.style.display='block';
+    document.getElementById('errBox').textContent='⚠️ '+errMsg+' — Tente novamente.';
+    document.getElementById('errBox').style.display='block';
   }
-
   grid.innerHTML='';
-
-  if(!allBooks.length && !errMsg){
-    document.getElementById('emptyState').style.display='block';
-  } else if(allBooks.length){
+  if(!allBooks.length&&!errMsg){document.getElementById('emptyState').style.display='block';}
+  else if(allBooks.length){
     renderBooks(currentSort);
-    const gName=activeGenre?`${activeGenre.icon} ${activeGenre.name}`:'Romance';
-    document.getElementById('resCount').innerHTML=`<strong>${totalResults.toLocaleString('pt-BR')}</strong> livros em <strong>${gName}</strong>`;
+    const lbl=activeGenre?`${activeGenre.icon} ${activeGenre.name}`:(activeSubQ||'Busca');
+    document.getElementById('resCount').innerHTML=`<strong>${totalResults.toLocaleString('pt-BR')}</strong> livros · <strong>${lbl}</strong>`;
     document.getElementById('resHeader').style.display='flex';
     document.getElementById('pagination').style.display='flex';
     document.getElementById('btnPrev').disabled=page===0;
     document.getElementById('btnNext').disabled=allBooks.length<10;
-    fetchAI(gbQuery, allBooks.slice(0,5));
+    fetchAI(gbQuery,allBooks.slice(0,5));
   }
-
   isLoading=false;
   document.getElementById('statusBar').style.display='none';
 }
 
-/* ══ STORE PRICES helper ══ */
-function buildStorePrices(refPrice, onlinePrice, title, author){
+function buildSP(refPrice,onlinePrice,title,author){
   return STORES.map(s=>{
     const base=onlinePrice||refPrice;
     const raw=base*(1-s.disc)*(0.92+Math.random()*.16);
-    return{...s, price:Math.round(raw*10)/10, offPct:Math.round(s.disc*100),
-      isEstimate:!onlinePrice, href:s.fn(title,author)};
+    return{...s,price:Math.round(raw*10)/10,offPct:Math.round(s.disc*100),isEstimate:!onlinePrice,href:s.fn(title,author)};
   }).sort((a,b)=>a.price-b.price);
 }
 
-/* ══ SORT ══ */
+/* ══ SORT + YEAR FILTER ══ */
 function sortBy(type){
   currentSort=type;
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('sort'+type[0].toUpperCase()+type.slice(1)).classList.add('active');
   renderBooks(type);
 }
+
 function renderBooks(sort){
-  const s=[...allBooks];
-  if(sort==='discount') s.sort((a,b)=>b.discount-a.discount);
-  else if(sort==='price') s.sort((a,b)=>a.bestPrice-b.bestPrice);
-  else if(sort==='new') s.sort((a,b)=>(b.year||0)-(a.year||0));
-  document.getElementById('grid').innerHTML='';
-  s.forEach((b,i)=>document.getElementById('grid').appendChild(buildCard(b,i)));
+  let books=[...allBooks];
+  if(yearFilter>0) books=books.filter(b=>(parseInt(b.year)||0)>=yearFilter);
+  if(sort==='discount') books.sort((a,b)=>b.discount-a.discount);
+  else if(sort==='price') books.sort((a,b)=>a.bestPrice-b.bestPrice);
+  else if(sort==='new') books.sort((a,b)=>(b.year||0)-(a.year||0));
+  const bestIdx=books.reduce((bi,b,i)=>b.discount>books[bi].discount?i:bi,0);
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  if(!books.length){document.getElementById('emptyState').style.display='block';return}
+  document.getElementById('emptyState').style.display='none';
+  books.forEach((b,i)=>grid.appendChild(buildCard(b,i,i===bestIdx)));
 }
 
 /* ══ VERDICT ══ */
@@ -506,104 +529,205 @@ function verdict(d){
 }
 
 /* ══ BUILD CARD ══ */
-function buildCard(book,idx){
+function buildCard(book,idx,isBestDeal){
   const v=verdict(book.discount);
   const allEst=book.storePrices.every(s=>s.isEstimate);
   const barPct=Math.min(book.discount,100);
   const barColor=book.discount>=40?'#34d399':book.discount>=25?'#fbbf24':'#c084fc';
-
+  const isSaved=wishlist.some(w=>w.title===book.title);
   const coverHtml=book.cover
-    ?`<img class="book-cover" src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-       <div class="cover-ph" style="display:none">${esc(book.title)}</div>`
-    :`<div class="cover-ph">${esc(book.title)}</div>`;
-
+    ?`<img class="book-cover" src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy" onclick="openModal(${idx})" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cover-ph" style="display:none" onclick="openModal(${idx})">${esc(book.title)}</div>`
+    :`<div class="cover-ph" onclick="openModal(${idx})">${esc(book.title)}</div>`;
   const spRows=book.storePrices.map((s,i)=>`
     <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}">
-      <div class="sp-left">
-        <div class="sp-dot" style="background:${s.color}"></div>
-        <span class="sp-name">${s.name}
-          ${i===0?`<span class="best-tag">MENOR PREÇO</span>`:''}</span>
-      </div>
-      <div class="sp-right">
-        <span class="sp-price">R$ ${fmt(s.price)}</span>
-        <span class="sp-off">-${s.offPct}%${s.isEstimate?' *':''}</span>
-      </div>
+      <div class="sp-left"><div class="sp-dot" style="background:${s.color}"></div>
+        <span class="sp-name">${s.name} ${i===0?`<span class="best-tag">MENOR</span>`:''}</span></div>
+      <div class="sp-right"><span class="sp-price">R$ ${fmt(s.price)}</span>
+        <span class="sp-off">-${s.offPct}%${s.isEstimate?' *':''}</span></div>
     </a>`).join('');
-
   const card=document.createElement('div');
-  card.className='book-card'; card.style.animationDelay=`${idx*.04}s`;
+  card.className='book-card'+(isBestDeal?' best-deal':'');
+  card.style.animationDelay=`${idx*.04}s`;
+  card.dataset.idx=idx;
   card.innerHTML=`
+    <div class="best-deal-banner">🏆 Melhor oferta desta busca</div>
     <div class="card-top">
       <div class="cover-wrap">
         ${coverHtml}
         ${book.discount>=15?`<div class="badge-off">-${book.discount}%</div>`:''}
       </div>
       <div class="card-info">
-        <div class="book-title">${esc(book.title)}</div>
+        <div class="book-title" onclick="openModal(${idx})">${esc(book.title)}</div>
         <div class="book-author">${esc(book.author)}</div>
         ${book.year?`<div class="book-year" style="color:${book.genreColor}">${book.year}</div>`:''}
         <div class="verdict ${v.cls}">${v.icon} ${v.txt}</div>
       </div>
+      <button class="heart-btn${isSaved?' saved':''}" onclick="toggleWishlist(${idx},this)" title="Adicionar aos favoritos">${isSaved?'❤️':'🤍'}</button>
     </div>
     <div class="comparativo">
-      <div class="comp-header">
-        <span style="font-size:13px">📊</span>
+      <div class="comp-header"><span style="font-size:13px">📊</span>
         <span class="comp-htitle">Comparativo de preços</span>
-        <span style="font-size:10px;margin-left:auto;color:${allEst?'var(--yellow)':'var(--green)'}">
-          ${allEst?'* estimativas':'dados reais ✓'}</span>
+        <span style="font-size:10px;margin-left:auto;color:${allEst?'var(--yellow)':'var(--green)'}">${allEst?'* estimativas':'dados reais ✓'}</span>
       </div>
       <div class="price-summary">
-        <div class="ps-block">
-          <span class="ps-label">Preço de capa</span>
-          <span class="ps-val-strike">R$ ${fmt(book.refPrice)}</span>
-        </div>
+        <div class="ps-block"><span class="ps-label">Preço de capa</span><span class="ps-val-strike">R$ ${fmt(book.refPrice)}</span></div>
         <div class="ps-divider"></div>
-        <div class="ps-block">
-          <span class="ps-label">Menor preço</span>
-          <span class="ps-val-best">R$ ${fmt(book.bestPrice)}</span>
-        </div>
+        <div class="ps-block"><span class="ps-label">Menor preço</span><span class="ps-val-best">R$ ${fmt(book.bestPrice)}</span></div>
         <div class="disc-pill">-${book.discount}%</div>
         <div class="econ-chip">↓ R$ ${fmt(book.economy)}</div>
       </div>
-      <div class="store-prices">
-        <div class="sp-label"><span>🏪</span> Preço por loja — clique para comprar</div>
-        ${spRows}
-      </div>
-      <div class="bar-wrap">
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${barPct}%;background:linear-gradient(90deg,${barColor},#c084fc)"></div>
-        </div>
-      </div>
+      <div class="store-prices"><div class="sp-label"><span>🏪</span> Clique na loja para comprar</div>${spRows}</div>
+      <div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:${barPct}%;background:linear-gradient(90deg,${barColor},#c084fc)"></div></div></div>
     </div>`;
   return card;
+}
+
+/* ══ WISHLIST ══ */
+function toggleWishlist(idx,btn){
+  const books=[...allBooks];
+  const rendered=document.getElementById('grid').querySelectorAll('.book-card');
+  // find rendered order index
+  let book=null;
+  rendered.forEach((card,ri)=>{if(ri===parseInt(card.dataset.idx)||card.dataset.idx==idx) book=null});
+  // simpler: use allBooks directly via current sorted list
+  const sorted=[...allBooks];
+  if(currentSort==='discount') sorted.sort((a,b)=>b.discount-a.discount);
+  else if(currentSort==='price') sorted.sort((a,b)=>a.bestPrice-b.bestPrice);
+  else if(currentSort==='new') sorted.sort((a,b)=>(b.year||0)-(a.year||0));
+  if(yearFilter>0) {/* already filtered */}
+  book = sorted[idx] || allBooks[idx];
+  if(!book) return;
+  const i=wishlist.findIndex(w=>w.title===book.title);
+  if(i>=0){
+    wishlist.splice(i,1);
+    btn.textContent='🤍';btn.classList.remove('saved');
+    showToast('Removido dos favoritos');
+  } else {
+    wishlist.push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href});
+    btn.textContent='❤️';btn.classList.add('saved');
+    showToast('❤️ Adicionado aos favoritos!');
+  }
+  localStorage.setItem('rf_wishlist',JSON.stringify(wishlist));
+  updateWLCount();
+}
+
+function updateWLCount(){
+  const el=document.getElementById('wlCount');
+  el.textContent=wishlist.length;
+  el.style.display=wishlist.length?'inline':'none';
+}
+
+function toggleWL(){
+  const panel=document.getElementById('wlPanel');
+  const overlay=document.getElementById('wlOverlay');
+  const isOpen=panel.classList.contains('open');
+  panel.classList.toggle('open');
+  overlay.classList.toggle('show');
+  if(!isOpen) renderWishlist();
+}
+
+function renderWishlist(){
+  const c=document.getElementById('wlContent');
+  if(!wishlist.length){c.innerHTML='<div class="wl-empty">📚 Nenhum favorito ainda.<br>Clique no 🤍 nos cards!</div>';return}
+  c.innerHTML=wishlist.map((w,i)=>`
+    <div class="wl-item">
+      ${w.cover?`<img class="wl-cover" src="${esc(w.cover)}" onerror="this.style.display='none'">`:
+                `<div class="wl-cover-ph">📖</div>`}
+      <div class="wl-info">
+        <div class="wl-item-title">${esc(w.title)}</div>
+        <div class="wl-item-author">${esc(w.author)}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <span class="wl-item-price">R$ ${fmt(w.bestPrice)}</span>
+          <span style="font-size:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:2px 7px;border-radius:5px;font-weight:700">-${w.discount}%</span>
+        </div>
+        ${w.href?`<a href="${w.href}" target="_blank" style="display:inline-block;margin-top:8px;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(192,132,252,.3);padding:4px 10px;border-radius:7px;">Ver menor preço →</a>`:''}
+      </div>
+      <button class="wl-remove" onclick="removeWL(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeWL(i){wishlist.splice(i,1);localStorage.setItem('rf_wishlist',JSON.stringify(wishlist));updateWLCount();renderWishlist()}
+
+/* ══ MODAL ══ */
+let currentBooks=[];
+function openModal(idx){
+  const sorted=[...allBooks];
+  if(currentSort==='discount') sorted.sort((a,b)=>b.discount-a.discount);
+  else if(currentSort==='price') sorted.sort((a,b)=>a.bestPrice-b.bestPrice);
+  else if(currentSort==='new') sorted.sort((a,b)=>(b.year||0)-(a.year||0));
+  const book=sorted[idx]||allBooks[idx];
+  if(!book) return;
+  const isSaved=wishlist.some(w=>w.title===book.title);
+  const spRows=book.storePrices.map((s,i)=>`
+    <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}">
+      <div class="sp-left"><div class="sp-dot" style="background:${s.color}"></div>
+        <span class="sp-name">${s.name} ${i===0?`<span class="best-tag">MENOR</span>`:''}</span></div>
+      <div class="sp-right"><span class="sp-price">R$ ${fmt(s.price)}</span><span class="sp-off">-${s.offPct}%</span></div>
+    </a>`).join('');
+  document.getElementById('modalContent').innerHTML=`
+    <div class="modal-top">
+      ${book.cover?`<img class="modal-cover" src="${esc(book.cover)}" onerror="this.style.display='none'">`:
+                   `<div class="modal-cover-ph">📖</div>`}
+      <div class="modal-meta">
+        <div class="modal-title">${esc(book.title)}</div>
+        <div class="modal-author">por ${esc(book.author)}</div>
+        ${book.year?`<div class="modal-tags"><span class="modal-tag">📅 ${book.year}</span>${activeGenre?`<span class="modal-tag">${activeGenre.icon} ${activeGenre.name}</span>`:''}</div>`:''}
+        <div class="modal-price-row">
+          <span class="modal-best-price">R$ ${fmt(book.bestPrice)}</span>
+          <span class="modal-disc">-${book.discount}%</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Preço de capa: <s>R$ ${fmt(book.refPrice)}</s> · Economize R$ ${fmt(book.economy)}</div>
+      </div>
+    </div>
+    ${book.description?`<div class="modal-desc">${esc(book.description.slice(0,400))}${book.description.length>400?'...':''}</div>`:''}
+    <div class="modal-stores"><div class="modal-stores-title">🏪 Compare e compre</div>${spRows}</div>
+    <div class="modal-wl">
+      <button class="btn-add-wl${isSaved?' saved':''}" onclick="toggleWLFromModal('${esc(book.title)}',this)">
+        ${isSaved?'❤️ Nos favoritos':'🤍 Adicionar aos favoritos'}
+      </button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){if(e.target===document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open')}
+
+function toggleWLFromModal(title,btn){
+  const book=allBooks.find(b=>b.title===title);
+  if(!book) return;
+  const i=wishlist.findIndex(w=>w.title===title);
+  if(i>=0){wishlist.splice(i,1);btn.textContent='🤍 Adicionar aos favoritos';btn.classList.remove('saved')}
+  else{wishlist.push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href});btn.innerHTML='❤️ Nos favoritos';btn.classList.add('saved')}
+  localStorage.setItem('rf_wishlist',JSON.stringify(wishlist));
+  updateWLCount();showToast(i>=0?'Removido dos favoritos':'❤️ Adicionado aos favoritos!');
+}
+
+/* ══ TOAST ══ */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
 }
 
 /* ══ AI ══ */
 async function fetchAI(q,books){
   try{
     const list=books.map(b=>`"${b.title}" menor R$${fmt(b.bestPrice)} na ${b.storePrices[0]?.name} -${b.discount}%`).join(' | ');
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:180,
-        messages:[{role:'user',content:
-          `Gênero: "${activeGenre?.name}". Livros: ${list}.
-          2 frases diretas em pt-BR sem markdown:
-          1) Melhor negócio atual
-          2) Dica onde comprar mais barato esse gênero no Brasil`}]})
-    });
-    const d=await res.json();
-    const t=d.content?.[0]?.text;
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:160,
+        messages:[{role:'user',content:`Gênero/busca: "${activeGenre?.name||q}". Livros: ${list}. 2 frases diretas em pt-BR sem markdown: 1) Melhor negócio e economia 2) Dica de onde comprar esse gênero mais barato no Brasil`}]})});
+    const d=await res.json();const t=d.content?.[0]?.text;
     if(t){document.getElementById('aiText').textContent=t;document.getElementById('aiBox').style.display='block'}
   }catch(e){}
 }
+
+/* ══ PAGINATION ══ */
+function prevPage(){if(currentPage>0){currentPage--;doFetch(activeGenre?.olSubject||null,activeSubQ||activeGenre?.gbQuery||'romance',currentPage,activeSubQ||undefined);window.scrollTo({top:0,behavior:'smooth'})}}
+function nextPage(){currentPage++;doFetch(activeGenre?.olSubject||null,activeSubQ||activeGenre?.gbQuery||'romance',currentPage,activeSubQ||undefined);window.scrollTo({top:0,behavior:'smooth'})}
 
 /* ══ UTILS ══ */
 function fmt(n){return n!=null?n.toFixed(2).replace('.',','):'—'}
 function eu(s){return encodeURIComponent(s||'')}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function prevPage(){if(currentPage>0){currentPage--;doFetch(activeGenre?.olSubject||null,activeGbQ||activeGenre?.gbQuery,currentPage,activeOlQ||undefined);window.scrollTo({top:0,behavior:'smooth'})}}
-function nextPage(){currentPage++;doFetch(activeGenre?.olSubject||null,activeGbQ||activeGenre?.gbQuery,currentPage,activeOlQ||undefined);window.scrollTo({top:0,behavior:'smooth'})}
 </script>
 </body>
 </html>
