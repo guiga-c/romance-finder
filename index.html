@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Romance Finder — Comparador de Preços</title>
+  <title>Romance Finder — Promoções por Gênero</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#0b0b0f;--surface:#131219;--surface2:#1a1825;--surface3:#221f2e;
       --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-      --accent:#c084fc;--accent2:#f472b6;
-      --green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;
+      --accent:#c084fc;--green:#34d399;--yellow:#fbbf24;--red:#f87171;
       --text:#f1eef8;--text2:#b8afc8;--muted:#6b6180;
     }
     html{scroll-behavior:smooth}
@@ -21,43 +20,51 @@
                  radial-gradient(ellipse 55% 40% at 85% 105%,rgba(244,114,182,.10) 0%,transparent 55%)}
 
     /* HEADER */
-    header{position:relative;z-index:1;text-align:center;padding:48px 20px 28px}
-    .logo-pill{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(192,132,252,.28);padding:5px 14px 5px 10px;border-radius:20px;margin-bottom:18px;background:rgba(192,132,252,.07)}
+    header{position:relative;z-index:1;text-align:center;padding:44px 20px 24px}
+    .logo-pill{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(192,132,252,.28);padding:5px 14px 5px 10px;border-radius:20px;margin-bottom:16px;background:rgba(192,132,252,.07)}
     h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3.2rem);font-weight:700;line-height:1.12;background:linear-gradient(135deg,#f1eef8 20%,#c084fc 55%,#f472b6 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
-    .subtitle{font-size:14px;color:var(--text2);max-width:420px;margin:0 auto 26px;line-height:1.65}
+    .subtitle{font-size:14px;color:var(--text2);max-width:400px;margin:0 auto 0;line-height:1.65}
 
-    /* SEARCH */
-    .search-wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:0 18px}
-    .search-row{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid rgba(192,132,252,.22);border-radius:16px;padding:5px 5px 5px 18px;transition:border-color .2s,box-shadow .2s}
-    .search-row:focus-within{border-color:rgba(192,132,252,.55);box-shadow:0 0 0 3px rgba(192,132,252,.09),0 8px 30px rgba(0,0,0,.45)}
-    .search-row input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);padding:9px 0}
-    .search-row input::placeholder{color:var(--muted)}
-    .btn-search{background:linear-gradient(135deg,#c084fc,#f472b6);border:none;border-radius:11px;padding:12px 26px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;white-space:nowrap}
-    .btn-search:hover{opacity:.85;transform:scale(.98)}
-    .btn-search:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    /* GENRE PICKER */
+    .genre-section{position:relative;z-index:1;max-width:900px;margin:28px auto 0;padding:0 18px}
+    .genre-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:13px;text-align:center}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 
-    /* CHIPS */
-    .filters{position:relative;z-index:1;max-width:600px;margin:12px auto 0;padding:0 18px;display:flex;gap:7px;flex-wrap:wrap}
-    .chip{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s}
-    .chip:hover,.chip.active{border-color:rgba(192,132,252,.45);background:rgba(192,132,252,.1);color:var(--accent)}
+    .genre-card{
+      position:relative;background:var(--surface);border:2px solid var(--border);
+      border-radius:14px;padding:18px 14px 14px;cursor:pointer;
+      transition:all .22s;text-align:center;overflow:hidden;
+    }
+    .genre-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .22s}
+    .genre-card:hover::before,.genre-card.active::before{opacity:1}
+    .genre-card:hover,.genre-card.active{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
+    .genre-card.active{border-width:2px}
+
+    .genre-icon{font-size:28px;margin-bottom:8px;display:block;position:relative;z-index:1}
+    .genre-name{font-size:12.5px;font-weight:700;position:relative;z-index:1;line-height:1.2}
+    .genre-sub{font-size:10.5px;color:var(--muted);margin-top:3px;position:relative;z-index:1}
+    .genre-count{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;z-index:1}
+
+    /* Sub-filter chips (shown after genre selected) */
+    .subfilter-wrap{position:relative;z-index:1;max-width:900px;margin:16px auto 0;padding:0 18px;display:none}
+    .subfilter-title{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:9px;letter-spacing:.08em;text-transform:uppercase}
+    .subfilter-row{display:flex;gap:7px;flex-wrap:wrap}
+    .sfchip{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s}
+    .sfchip:hover,.sfchip.active{border-color:rgba(192,132,252,.45);background:rgba(192,132,252,.1);color:var(--accent)}
+
+    /* SORT + EXTRA FILTERS */
+    .controls{position:relative;z-index:1;max-width:900px;margin:14px auto 0;padding:0 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .ctrl-label{font-size:12px;color:var(--muted);white-space:nowrap}
+    .sort-row{display:flex;gap:6px;flex-wrap:wrap}
+    .sort-btn{font-size:11px;font-weight:500;padding:6px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
+    .sort-btn.active,.sort-btn:hover{border-color:rgba(192,132,252,.4);color:var(--accent);background:rgba(192,132,252,.08)}
+    .spacer{flex:1}
+    .page-lang{display:flex;gap:6px}
+    .lang-btn{font-size:11px;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
+    .lang-btn.active{border-color:rgba(251,191,36,.4);color:var(--yellow);background:rgba(251,191,36,.07)}
 
     /* MAIN */
-    main{position:relative;z-index:1;max-width:1160px;margin:34px auto 0;padding:0 18px 80px}
-
-    /* STORE TOP LINKS */
-    .store-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px}
-    .store-quick{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:9px 15px;text-decoration:none;color:var(--text2);font-size:12.5px;font-weight:500;transition:all .2s}
-    .store-quick:hover{border-color:var(--border2);background:var(--surface2);color:var(--text);transform:translateY(-1px)}
-    .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
-    /* HERO */
-    #hero-state{text-align:center;padding:10px 0 34px}
-    .cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;max-width:660px;margin:24px auto 0}
-    .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:16px 12px;cursor:pointer;transition:all .22s;text-align:center}
-    .cat-card:hover{border-color:rgba(192,132,252,.38);background:var(--surface2);transform:translateY(-2px)}
-    .cat-icon{font-size:24px;margin-bottom:6px;display:block}
-    .cat-label{font-size:13px;font-weight:600}
-    .cat-sub{font-size:11px;color:var(--muted);margin-top:3px}
+    main{position:relative;z-index:1;max-width:1160px;margin:30px auto 0;padding:0 18px 80px}
 
     /* STATUS */
     .status-bar{display:none;align-items:center;gap:9px;font-size:13px;color:var(--muted);margin-bottom:22px}
@@ -65,18 +72,15 @@
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
     /* AI BOX */
-    .ai-box{background:var(--surface);border:1px solid rgba(192,132,252,.18);border-radius:14px;padding:16px 20px;margin-bottom:24px;display:none}
+    .ai-box{background:var(--surface);border:1px solid rgba(192,132,252,.18);border-radius:14px;padding:16px 20px;margin-bottom:22px;display:none}
     .ai-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
     .ai-badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
     .ai-box p{font-size:13.5px;color:var(--text2);line-height:1.7}
 
     /* RES HEADER */
-    .res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+    .res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
     .res-count{font-size:13px;color:var(--muted)}
     .res-count strong{color:var(--text)}
-    .sort-row{display:flex;gap:6px}
-    .sort-btn{font-size:11px;font-weight:500;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
-    .sort-btn.active,.sort-btn:hover{border-color:rgba(192,132,252,.4);color:var(--accent);background:rgba(192,132,252,.08)}
 
     /* GRID */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
@@ -85,94 +89,71 @@
     .book-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;animation:fadeUp .38s ease both}
     .book-card:hover{transform:translateY(-4px);border-color:rgba(192,132,252,.28);box-shadow:0 12px 36px rgba(0,0,0,.55);background:var(--surface2)}
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-    /* CARD TOP */
     .card-top{display:flex}
     .cover-wrap{position:relative;flex-shrink:0;width:96px}
     .book-cover{width:96px;height:144px;object-fit:cover;display:block;background:var(--surface2)}
     .cover-ph{width:96px;height:144px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--surface2),var(--surface3));font-family:'Playfair Display',serif;font-style:italic;font-size:11px;color:var(--muted);text-align:center;padding:10px;line-height:1.4}
     .badge-off{position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px}
-
     .card-info{flex:1;padding:13px 13px 10px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
     .book-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;line-height:1.3;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .book-author{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .book-year{font-size:10.5px;color:var(--accent);font-weight:500}
     .verdict{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;width:fit-content}
-    .v-hot {background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.25)}
+    .v-hot{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.25)}
     .v-good{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.22)}
-    .v-avg {background:rgba(192,132,252,.12);color:#c084fc;border:1px solid rgba(192,132,252,.22)}
+    .v-avg{background:rgba(192,132,252,.12);color:#c084fc;border:1px solid rgba(192,132,252,.22)}
     .v-skip{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.22)}
-    .v-info{background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.22)}
 
-    /* ═══ COMPARATIVO ═══ */
+    /* COMPARATIVO */
     .comparativo{margin:0 12px 12px;background:var(--surface3);border:1px solid var(--border2);border-radius:12px;overflow:hidden}
-    .comp-header{padding:10px 13px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+    .comp-header{padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
     .comp-header-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-
-    /* price summary row */
-    .price-summary{padding:11px 13px 8px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+    .price-summary{padding:10px 13px 8px;display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
     .ps-block{display:flex;flex-direction:column;gap:2px}
-    .ps-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .ps-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
     .ps-val-strike{font-size:13px;color:var(--muted);text-decoration:line-through}
     .ps-val-best{font-size:20px;font-weight:700;color:var(--green);line-height:1}
-    .ps-val-ref{font-size:14px;font-weight:600;color:var(--yellow)}
-    .ps-divider{width:1px;height:36px;background:var(--border2);align-self:center}
+    .ps-divider{width:1px;height:34px;background:var(--border2);align-self:center}
     .discount-pill{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;align-self:center}
     .economy-chip{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--green);font-size:11px;font-weight:600;padding:4px 10px;border-radius:8px;align-self:center}
-
-    /* store price list */
-    .store-prices{padding:10px 13px}
-    .sp-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-    .sp-row{display:flex;align-items:center;justify-content:space-between;padding:6px 9px;border-radius:8px;margin-bottom:4px;transition:background .15s;cursor:pointer;text-decoration:none}
+    .store-prices{padding:9px 13px}
+    .sp-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+    .sp-row{display:flex;align-items:center;justify-content:space-between;padding:6px 9px;border-radius:8px;margin-bottom:4px;transition:background .15s;text-decoration:none}
     .sp-row:hover{background:rgba(255,255,255,.04)}
     .sp-row.cheapest{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.18)}
-    .sp-left{display:flex;align-items:center;gap:8px}
+    .sp-left{display:flex;align-items:center;gap:7px}
     .sp-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-    .sp-name{font-size:12.5px;font-weight:500;color:var(--text2)}
+    .sp-name{font-size:12px;font-weight:500;color:var(--text2)}
     .sp-row.cheapest .sp-name{color:var(--text);font-weight:600}
     .sp-right{display:flex;align-items:center;gap:7px}
-    .sp-price{font-size:13px;font-weight:700}
+    .sp-price{font-size:13px;font-weight:700;color:var(--text2)}
     .sp-row.cheapest .sp-price{color:var(--green)}
     .sp-off{font-size:9.5px;color:var(--muted)}
     .sp-best-tag{font-size:9px;font-weight:700;background:var(--green);color:#022c22;padding:2px 6px;border-radius:4px}
-    .sp-bar-wrap{padding:0 13px 11px}
+    .sp-bar-wrap{padding:0 13px 10px}
     .sp-bar-track{height:5px;background:var(--surface);border-radius:10px;overflow:hidden}
-    .sp-bar-fill{height:100%;border-radius:10px;transition:width .7s ease}
-
-    /* no-price */
-    .no-price-block{padding:13px;text-align:center}
-    .no-price-block p{font-size:12px;color:var(--muted);line-height:1.6}
-    .no-price-avg{font-size:15px;font-weight:700;color:var(--yellow);margin:6px 0 2px}
-    .no-price-sub{font-size:11px;color:var(--muted)}
-
-    /* STORE BUTTONS */
-    .store-btns{padding:0 12px 12px;display:flex;gap:5px;flex-wrap:wrap}
-    .sbtn{font-size:10px;font-weight:600;padding:5px 10px;border-radius:7px;text-decoration:none;transition:opacity .18s;white-space:nowrap}
-    .sbtn:hover{opacity:.75}
-    .s-amazon {background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
-    .s-estante{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.2)}
-    .s-ameri  {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.2)}
-    .s-saraiva{background:rgba(96,165,250,.12); color:#60a5fa;border:1px solid rgba(96,165,250,.2)}
-    .s-magalu {background:rgba(129,140,248,.12);color:#818cf8;border:1px solid rgba(129,140,248,.2)}
+    .sp-bar-fill{height:100%;border-radius:10px}
 
     /* SKELETON */
     .skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
     .empty{text-align:center;padding:70px 20px;display:none}
     .empty-icon{font-size:52px;margin-bottom:16px;display:block}
     .empty h2{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:8px}
     .empty p{color:var(--muted);font-size:14px}
-
     .pagination{display:flex;justify-content:center;gap:10px;margin-top:40px}
     .btn-page{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 22px;color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;font-weight:500}
     .btn-page:hover{border-color:rgba(192,132,252,.4);color:var(--accent)}
     .btn-page:disabled{opacity:.3;cursor:not-allowed}
+    footer{position:relative;z-index:1;text-align:center;padding:20px 18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
+    .disclaimer{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:5px 11px;font-size:11px;color:var(--yellow);margin-top:6px}
 
-    footer{position:relative;z-index:1;text-align:center;padding:22px 18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
-    .disclaimer{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--yellow);margin-top:8px}
+    /* PLACEHOLDER state */
+    #placeholder-state{text-align:center;padding:50px 20px}
+    #placeholder-state p{font-size:15px;color:var(--text2);margin-bottom:8px}
+    #placeholder-state span{font-size:13px;color:var(--muted)}
 
-    @media(max-width:640px){h1{font-size:1.75rem}.grid{grid-template-columns:1fr}.cats{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){h1{font-size:1.75rem}.grid{grid-template-columns:1fr}.genre-grid{grid-template-columns:repeat(3,1fr)}}
     @media(min-width:900px){.grid{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}}
   </style>
 </head>
@@ -180,68 +161,54 @@
 
 <header>
   <div class="logo-pill"><span style="font-size:14px">📚</span> Romance Finder</div>
-  <h1>Onde está o<br>menor preço agora?</h1>
-  <p class="subtitle">Compare o preço de capa com cada loja e veja imediatamente onde comprar mais barato.</p>
+  <h1>Promoções por gênero</h1>
+  <p class="subtitle">Escolha o gênero e veja onde cada livro está mais barato agora.</p>
 </header>
 
-<div class="search-wrap">
-  <div class="search-row">
-    <span style="font-size:16px;opacity:.35;flex-shrink:0">🔍</span>
-    <input id="searchInput" type="text" placeholder="Título, autor, série ou tema..." autocomplete="off" />
-    <button class="btn-search" id="btnSearch" onclick="doSearch()">Buscar</button>
-  </div>
+<!-- GENRE PICKER -->
+<div class="genre-section">
+  <div class="genre-label">Selecione o gênero</div>
+  <div class="genre-grid" id="genreGrid"></div>
 </div>
 
-<div class="filters">
-  <div class="chip active" onclick="setFilter('',this)">Todos</div>
-  <div class="chip" onclick="setFilter('romance contemporâneo',this)">Contemporâneo</div>
-  <div class="chip" onclick="setFilter('romance histórico',this)">Histórico</div>
-  <div class="chip" onclick="setFilter('booktok romance',this)">BookTok</div>
-  <div class="chip" onclick="setFilter('dark romance',this)">Dark Romance</div>
-  <div class="chip" onclick="setFilter('romance fantasia',this)">Fantasia</div>
-  <div class="chip" onclick="setFilter('new adult romance',this)">New Adult</div>
+<!-- SUB-FILTERS -->
+<div class="subfilter-wrap" id="subfilterWrap">
+  <div class="subfilter-title">Filtrar por</div>
+  <div class="subfilter-row" id="subfilterRow"></div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls" id="controls" style="display:none">
+  <span class="ctrl-label">Ordenar:</span>
+  <div class="sort-row">
+    <button class="sort-btn active" id="sortDiscount" onclick="sortBy('discount')">🏷️ Maior desconto</button>
+    <button class="sort-btn" id="sortPrice"    onclick="sortBy('price')">💰 Menor preço</button>
+    <button class="sort-btn" id="sortNew"      onclick="sortBy('new')">🆕 Mais novos</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="page-lang">
+    <button class="lang-btn active" id="langAll" onclick="setLang('all',this)">🌍 Todos</button>
+    <button class="lang-btn" id="langPT"         onclick="setLang('pt',this)">🇧🇷 Português</button>
+  </div>
 </div>
 
 <main>
-  <div class="store-row">
-    <a class="store-quick" href="https://www.amazon.com.br/s?k=romance&i=stripbooks&s=price-asc-rank" target="_blank"><div class="dot" style="background:#fbbf24"></div>Amazon — Mais Baratos</a>
-    <a class="store-quick" href="https://www.estantevirtual.com.br/livros/romance?order=price_asc" target="_blank"><div class="dot" style="background:#34d399"></div>Estante Virtual — Usados</a>
-    <a class="store-quick" href="https://www.americanas.com.br/busca/livros%20romance?sortBy=priceAsc" target="_blank"><div class="dot" style="background:#f87171"></div>Americanas — Promoções</a>
-    <a class="store-quick" href="https://www.magazineluiza.com.br/livros-romance/l/lv01/" target="_blank"><div class="dot" style="background:#818cf8"></div>Magalu — Livros</a>
-  </div>
-
-  <div id="hero-state">
-    <p style="color:var(--muted);font-size:13px;margin-bottom:4px">Busca rápida</p>
-    <div class="cats">
-      <div class="cat-card" onclick="quickSearch('Colleen Hoover romance')"><span class="cat-icon">⭐</span><div class="cat-label">Colleen Hoover</div><div class="cat-sub">Bestsellers</div></div>
-      <div class="cat-card" onclick="quickSearch('BookTok romance viral')"><span class="cat-icon">📱</span><div class="cat-label">BookTok</div><div class="cat-sub">Viral</div></div>
-      <div class="cat-card" onclick="quickSearch('dark romance suspense')"><span class="cat-icon">🌑</span><div class="cat-label">Dark Romance</div><div class="cat-sub">Intenso</div></div>
-      <div class="cat-card" onclick="quickSearch('romance histórico regência')"><span class="cat-icon">🏰</span><div class="cat-label">Histórico</div><div class="cat-sub">Regência</div></div>
-      <div class="cat-card" onclick="quickSearch('Sarah J Maas ACOTAR')"><span class="cat-icon">🌹</span><div class="cat-label">Sarah J. Maas</div><div class="cat-sub">ACOTAR</div></div>
-      <div class="cat-card" onclick="quickSearch('romance fantasia magia')"><span class="cat-icon">🔮</span><div class="cat-label">Fantasia</div><div class="cat-sub">Magia</div></div>
-      <div class="cat-card" onclick="quickSearch('Nicholas Sparks romance')"><span class="cat-icon">💌</span><div class="cat-label">Nicholas Sparks</div><div class="cat-sub">Clássicos</div></div>
-      <div class="cat-card" onclick="quickSearch('romance contemporâneo brasileiro')"><span class="cat-icon">🇧🇷</span><div class="cat-label">Romance BR</div><div class="cat-sub">Nacionais</div></div>
-    </div>
-  </div>
-
   <div class="status-bar" id="statusBar"><div class="pulse"></div><span id="statusText">Buscando...</span></div>
-
   <div class="ai-box" id="aiBox">
-    <div class="ai-head"><span style="font-size:15px">✨</span><span class="ai-badge">Análise de Preços — IA</span></div>
+    <div class="ai-head"><span style="font-size:15px">✨</span><span class="ai-badge">Análise do gênero — IA</span></div>
     <p id="aiText"></p>
   </div>
-
   <div class="res-header" id="resHeader" style="display:none">
     <span class="res-count" id="resCount"></span>
-    <div class="sort-row">
-      <button class="sort-btn active" id="sortDiscount" onclick="sortBy('discount')">🏷️ Maior desconto</button>
-      <button class="sort-btn" id="sortPrice" onclick="sortBy('price')">💰 Menor preço</button>
-      <button class="sort-btn" id="sortNew" onclick="sortBy('new')">🆕 Mais novos</button>
-    </div>
+  </div>
+
+  <div id="placeholder-state">
+    <p>👆 Escolha um gênero acima</p>
+    <span>Os livros com melhores promoções aparecerão aqui</span>
   </div>
 
   <div class="grid" id="grid"></div>
-  <div class="empty" id="emptyState"><span class="empty-icon">📭</span><h2>Nenhum resultado</h2><p>Tente outro título, autor ou tema.</p></div>
+  <div class="empty" id="emptyState"><span class="empty-icon">📭</span><h2>Nenhum resultado</h2><p>Tente outro gênero ou filtro.</p></div>
   <div class="pagination" id="pagination" style="display:none">
     <button class="btn-page" id="btnPrev" onclick="prevPage()">← Anterior</button>
     <button class="btn-page" id="btnNext" onclick="nextPage()">Próxima →</button>
@@ -250,72 +217,165 @@
 
 <footer>
   Romance Finder · Dados via Google Books & Open Library
-  <br><span class="disclaimer">⚠️ Preços marcados como "estimativa" são baseados em descontos típicos de cada loja — clique para confirmar o preço real</span>
+  <br><span class="disclaimer">⚠️ Preços marcados * são estimativas típicas de cada loja — clique para confirmar</span>
 </footer>
 
 <script>
-/* ─── STORE PROFILES ─────────────────────────────────────────────────────────
-   discount_pct: desconto típico do preço de capa (fontes: pesquisas de mercado BR 2024)
-   used_pct: desconto extra para livros usados (Estante Virtual)
-   color / dot: identidade visual
-   searchFn: URL de busca já ordenada por menor preço
-──────────────────────────────────────────────────────────────────────────────*/
-const STORES = [
+/* ══════════════════════════════════════════════════════
+   GENRE DEFINITIONS
+   apiQuery: enviado para a API do Google Books (subject:)
+   subFilters: chips de refinamento dentro do gênero
+══════════════════════════════════════════════════════ */
+const GENRES = [
   {
-    id:'amazon',   name:'Amazon',          color:'#fbbf24', dotCls:'',
-    discount:0.28, /* ~28% off em média */
-    searchFn:(t,a)=>`https://www.amazon.com.br/s?k=${enc(t+' '+a)}&i=stripbooks&s=price-asc-rank`,
+    id:'contemporaneo', name:'Contemporâneo', icon:'💕',
+    sub:'Histórias do dia a dia',
+    color:'#f472b6', bg:'rgba(244,114,182,.08)', border:'rgba(244,114,182,.35)',
+    apiQuery:'subject:contemporary+romance',
+    subFilters:['Comédia romântica','Enemies to lovers','Second chance','Office romance','Small town','Friends to lovers'],
+    subQueries:{'Comédia romântica':'romantic+comedy','Enemies to lovers':'enemies+to+lovers+romance','Second chance':'second+chance+romance','Office romance':'office+romance','Small town':'small+town+romance','Friends to lovers':'friends+to+lovers+romance'},
   },
   {
-    id:'estante',  name:'Estante Virtual', color:'#34d399', dotCls:'',
-    discount:0.55, /* ~55% off — inclui usados */
-    label:'(usado)',
-    searchFn:(t)=>`https://www.estantevirtual.com.br/busca?q=${enc(t)}&order=price_asc`,
+    id:'booktok', name:'BookTok', icon:'📱',
+    sub:'Viral nas redes',
+    color:'#e879f9', bg:'rgba(232,121,249,.08)', border:'rgba(232,121,249,.35)',
+    apiQuery:'subject:romance+bestseller+popular',
+    subFilters:['Colleen Hoover','Emily Henry','Ana Huang','Taylor Jenkins Reid','Ali Hazelwood','Happy place'],
+    subQueries:{'Colleen Hoover':'Colleen+Hoover+romance','Emily Henry':'Emily+Henry+romance','Ana Huang':'Ana+Huang+romance','Taylor Jenkins Reid':'Taylor+Jenkins+Reid','Ali Hazelwood':'Ali+Hazelwood','Happy place':'Emily+Henry+Happy+Place'},
   },
   {
-    id:'ameri',    name:'Americanas',      color:'#f87171', dotCls:'',
-    discount:0.22, /* ~22% off */
-    searchFn:(t)=>`https://www.americanas.com.br/busca/${enc(t)}?sortBy=priceAsc`,
+    id:'dark', name:'Dark Romance', icon:'🌑',
+    sub:'Intenso e emocionante',
+    color:'#a78bfa', bg:'rgba(167,139,250,.08)', border:'rgba(167,139,250,.35)',
+    apiQuery:'subject:dark+romance',
+    subFilters:['Mafia romance','Captive romance','Forbidden','Bully romance','Antihero','Age gap'],
+    subQueries:{'Mafia romance':'mafia+romance','Captive romance':'captive+romance','Forbidden':'forbidden+romance','Bully romance':'bully+romance','Antihero':'antihero+romance','Age gap':'age+gap+romance'},
   },
   {
-    id:'saraiva',  name:'Saraiva',         color:'#60a5fa', dotCls:'',
-    discount:0.18, /* ~18% off */
-    searchFn:(t)=>`https://www.saraiva.com.br/pesquisa/?q=${enc(t)}`,
+    id:'historico', name:'Histórico', icon:'🏰',
+    sub:'Regência & Vitoriano',
+    color:'#fbbf24', bg:'rgba(251,191,36,.08)', border:'rgba(251,191,36,.35)',
+    apiQuery:'subject:historical+romance',
+    subFilters:['Regência','Vitoriano','Medieval','Escocês','Georgian','Bridgerton'],
+    subQueries:{'Regência':'regency+romance','Vitoriano':'victorian+romance','Medieval':'medieval+romance','Escocês':'scottish+romance','Georgian':'georgian+romance','Bridgerton':'Bridgerton+romance'},
   },
   {
-    id:'magalu',   name:'Magalu',          color:'#818cf8', dotCls:'',
-    discount:0.20, /* ~20% off */
-    searchFn:(t)=>`https://www.magazineluiza.com.br/busca/${enc(t)}/?filters=category---LI`,
+    id:'fantasia', name:'Fantasia', icon:'🔮',
+    sub:'Magia & mundos mágicos',
+    color:'#34d399', bg:'rgba(52,211,153,.08)', border:'rgba(52,211,153,.35)',
+    apiQuery:'subject:fantasy+romance',
+    subFilters:['ACOTAR','Fae romance','Sarah J. Maas','Romantasy','Dragon romance','Witch romance'],
+    subQueries:{'ACOTAR':'ACOTAR+Sarah+Maas','Fae romance':'fae+romance','Sarah J. Maas':'Sarah+J+Maas+romance','Romantasy':'romantasy','Dragon romance':'dragon+romance','Witch romance':'witch+romance'},
+  },
+  {
+    id:'newadult', name:'New Adult', icon:'🎓',
+    sub:'College & jovens adultos',
+    color:'#60a5fa', bg:'rgba(96,165,250,.08)', border:'rgba(96,165,250,.35)',
+    apiQuery:'subject:new+adult+romance',
+    subFilters:['College romance','Atleta','Campus','Coming of age','Roommate','Sports romance'],
+    subQueries:{'College romance':'college+romance','Atleta':'athlete+romance','Campus':'campus+romance','Coming of age':'coming+of+age+romance','Roommate':'roommate+romance','Sports romance':'sports+romance'},
+  },
+  {
+    id:'suspense', name:'Suspense', icon:'🕵️',
+    sub:'Mistério & thriller',
+    color:'#f87171', bg:'rgba(248,113,113,.08)', border:'rgba(248,113,113,.35)',
+    apiQuery:'subject:romantic+suspense',
+    subFilters:['Thriller romântico','Mystery romance','Crime romance','Assassin','Witness protection','FBI romance'],
+    subQueries:{'Thriller romântico':'romantic+thriller','Mystery romance':'mystery+romance','Crime romance':'crime+romance','Assassin':'assassin+romance','Witness protection':'witness+protection+romance','FBI romance':'FBI+romance'},
+  },
+  {
+    id:'paranormal', name:'Paranormal', icon:'🧛',
+    sub:'Vampiros & sobrenatural',
+    color:'#818cf8', bg:'rgba(129,140,248,.08)', border:'rgba(129,140,248,.35)',
+    apiQuery:'subject:paranormal+romance',
+    subFilters:['Vampiros','Lobisomem','Anjos','Demônios','Shifter','Fae'],
+    subQueries:{'Vampiros':'vampire+romance','Lobisomem':'werewolf+romance','Anjos':'angel+romance','Demônios':'demon+romance','Shifter':'shifter+romance','Fae':'fae+paranormal+romance'},
+  },
+  {
+    id:'nacional', name:'Romance BR', icon:'🇧🇷',
+    sub:'Autores brasileiros',
+    color:'#4ade80', bg:'rgba(74,222,128,.08)', border:'rgba(74,222,128,.35)',
+    apiQuery:'subject:romance+language:portuguese',
+    subFilters:['Contemporâneo BR','Histórico BR','Suspense BR','Fantasia BR','New Adult BR'],
+    subQueries:{'Contemporâneo BR':'romance+contemporaneo+brasileiro','Histórico BR':'romance+historico+brasileiro','Suspense BR':'suspense+romantico+brasil','Fantasia BR':'fantasia+romantica+brasileira','New Adult BR':'romance+universitario+brasileiro'},
   },
 ];
 
-/* ─── STATE ─── */
-let allBooks=[], currentQuery='', currentPage=0, totalResults=0;
-let activeFilter='', isLoading=false, currentSort='discount';
+/* ══════════════════════════════════════════════════════ STORES */
+const STORES = [
+  {id:'amazon',  name:'Amazon',          color:'#fbbf24', discount:.28, label:'', fn:(t,a)=>`https://www.amazon.com.br/s?k=${enc(t+' '+a)}&i=stripbooks&s=price-asc-rank`},
+  {id:'estante', name:'Estante Virtual', color:'#34d399', discount:.55, label:'(usado)', fn:(t)=>`https://www.estantevirtual.com.br/busca?q=${enc(t)}&order=price_asc`},
+  {id:'ameri',   name:'Americanas',      color:'#f87171', discount:.22, label:'', fn:(t)=>`https://www.americanas.com.br/busca/${enc(t)}?sortBy=priceAsc`},
+  {id:'saraiva', name:'Saraiva',         color:'#60a5fa', discount:.18, label:'', fn:(t)=>`https://www.saraiva.com.br/pesquisa/?q=${enc(t)}`},
+  {id:'magalu',  name:'Magalu',          color:'#818cf8', discount:.20, label:'', fn:(t)=>`https://www.magazineluiza.com.br/busca/${enc(t)}/?filters=category---LI`},
+];
+
+/* ══════════════════════════════════════════════════════ STATE */
+let allBooks=[], currentPage=0, totalResults=0;
+let activeGenre=null, activeSubFilter='', activeLang='all';
+let isLoading=false, currentSort='discount';
 const PAGE=24;
 
-document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+/* ══════════════════════════════════════════════════════ BUILD GENRE GRID */
+(function buildGenreGrid(){
+  const grid=document.getElementById('genreGrid');
+  GENRES.forEach(g=>{
+    const card=document.createElement('div');
+    card.className='genre-card';
+    card.id='genre-'+g.id;
+    card.style.cssText=`--gc:${g.color};--gb:${g.bg};--gbd:${g.border}`;
+    card.innerHTML=`
+      <style>#genre-${g.id}::before{background:${g.bg}}
+      #genre-${g.id}:hover,#genre-${g.id}.active{border-color:${g.border};background:${g.bg}}</style>
+      <span class="genre-icon">${g.icon}</span>
+      <div class="genre-name" style="color:${g.color}">${g.name}</div>
+      <div class="genre-sub">${g.sub}</div>`;
+    card.onclick=()=>selectGenre(g);
+    grid.appendChild(card);
+  });
+})();
 
-function setFilter(f,el){
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active'); activeFilter=f;
-  if(currentQuery||f) doSearch();
-}
-function quickSearch(q){document.getElementById('searchInput').value=q;doSearch()}
-function doSearch(page=0){
-  const raw=document.getElementById('searchInput').value.trim();
-  const q=activeFilter?(raw?`${raw} ${activeFilter}`:activeFilter):raw;
-  if(!q) return;
-  currentQuery=q; currentPage=page; fetchBooks(q,page);
+/* ══════════════════════════════════════════════════════ SELECT GENRE */
+function selectGenre(g){
+  document.querySelectorAll('.genre-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('genre-'+g.id).classList.add('active');
+  activeGenre=g; activeSubFilter=''; currentPage=0;
+
+  /* build sub-filters */
+  const wrap=document.getElementById('subfilterWrap');
+  const row=document.getElementById('subfilterRow');
+  row.innerHTML=`<div class="sfchip active" onclick="setSubFilter('',this)">Todos</div>`
+    +g.subFilters.map(sf=>`<div class="sfchip" onclick="setSubFilter('${sf}',this)">${sf}</div>`).join('');
+  wrap.style.display='block';
+  document.getElementById('controls').style.display='flex';
+
+  fetchBooks(g,activeSubFilter,activeLang,0);
 }
 
-/* ─── FETCH ─── */
-async function fetchBooks(query,page=0){
+function setSubFilter(sf,el){
+  document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  activeSubFilter=sf; currentPage=0;
+  if(activeGenre) fetchBooks(activeGenre,sf,activeLang,0);
+}
+
+function setLang(lang,el){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  activeLang=lang;
+  if(activeGenre) fetchBooks(activeGenre,activeSubFilter,lang,currentPage);
+}
+
+/* ══════════════════════════════════════════════════════ FETCH */
+async function fetchBooks(genre,subFilter,lang,page){
   if(isLoading) return; isLoading=true;
-  ['hero-state','emptyState'].forEach(id=>document.getElementById(id).style.display='none');
-  ['aiBox','resHeader','pagination'].forEach(id=>document.getElementById(id).style.display='none');
+
+  document.getElementById('placeholder-state').style.display='none';
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('aiBox').style.display='none';
+  document.getElementById('resHeader').style.display='none';
+  document.getElementById('pagination').style.display='none';
   document.getElementById('statusBar').style.display='flex';
-  document.getElementById('btnSearch').disabled=true;
 
   const grid=document.getElementById('grid');
   grid.innerHTML='';
@@ -329,96 +389,59 @@ async function fetchBooks(query,page=0){
         <div class="skeleton" style="height:11px;width:30%;border-radius:5px"></div></div></div>
       <div style="margin:0 12px 12px;padding:13px;background:var(--surface3);border-radius:12px">
         <div class="skeleton" style="height:10px;width:40%;border-radius:4px;margin-bottom:11px"></div>
-        <div class="skeleton" style="height:26px;width:55%;border-radius:6px;margin-bottom:12px"></div>
-        ${[...Array(4)].map(()=>`<div class="skeleton" style="height:32px;border-radius:8px;margin-bottom:5px"></div>`).join('')}</div>`;
+        <div class="skeleton" style="height:26px;width:55%;border-radius:6px;margin-bottom:11px"></div>
+        ${[0,1,2,3].map(()=>`<div class="skeleton" style="height:32px;border-radius:8px;margin-bottom:5px"></div>`).join('')}</div>`;
     grid.appendChild(sk);
   }
 
   try{
-    const e=encodeURIComponent(query);
-    document.getElementById('statusText').textContent='Buscando livros físicos...';
-    const [gbRes,olRes]=await Promise.all([
-      fetch(`https://www.googleapis.com/books/v1/volumes?q=${e}+subject:romance&printType=books&startIndex=${page*PAGE}&maxResults=${PAGE}&orderBy=relevance`),
-      fetch(`https://openlibrary.org/search.json?q=${e}+romance&limit=8&fields=key,title,author_name,first_publish_year,cover_i`)
-    ]);
-    const gbData=await gbRes.json();
-    const olData=await olRes.json();
-    totalResults=gbData.totalItems||0;
+    /* monta a query para a API */
+    let apiQ = subFilter && genre.subQueries?.[subFilter]
+      ? genre.subQueries[subFilter]
+      : genre.apiQuery;
+    if(lang==='pt') apiQ += '&langRestrict=pt';
+
+    document.getElementById('statusText').textContent=`Buscando ${genre.name}...`;
+    const url=`https://www.googleapis.com/books/v1/volumes?q=${apiQ}&printType=books&startIndex=${page*PAGE}&maxResults=${PAGE}&orderBy=relevance`;
+    const res=await fetch(url);
+    const data=await res.json();
+    totalResults=data.totalItems||0;
 
     allBooks=[]; const seen=new Set();
 
-    /* Google Books */
-    if(gbData.items) gbData.items.forEach(item=>{
+    if(data.items) data.items.forEach(item=>{
       const info=item.volumeInfo||{}, sale=item.saleInfo||{};
       const title=(info.title||'').trim();
       if(!title||seen.has(title.toLowerCase())) return;
       seen.add(title.toLowerCase());
 
-      /* preço de capa em BRL */
-      let coverPrice=null, onlinePrice=null;
-      const toBRL=(v,cur)=> cur==='BRL'? v : v*5.1;
-      if(sale.listPrice?.amount)  coverPrice  = Math.round(toBRL(sale.listPrice.amount,  sale.listPrice.currencyCode)*100)/100;
-      if(sale.retailPrice?.amount) onlinePrice = Math.round(toBRL(sale.retailPrice.amount,sale.retailPrice.currencyCode)*100)/100;
+      const toBRL=(v,cur)=>cur==='BRL'?v:v*5.1;
+      let coverPrice=null,onlinePrice=null;
+      if(sale.listPrice?.amount)   coverPrice  =Math.round(toBRL(sale.listPrice.amount,  sale.listPrice.currencyCode)*100)/100;
+      if(sale.retailPrice?.amount) onlinePrice =Math.round(toBRL(sale.retailPrice.amount,sale.retailPrice.currencyCode)*100)/100;
 
-      /* estimativa de capa se não veio da API */
       const pages=info.pageCount||0;
-      const estCover = pages>400?69.90 : pages>250?54.90 : pages>0?44.90 : 54.90;
-      const refPrice  = coverPrice || estCover;
-      const hasPriceData = !!(coverPrice||onlinePrice);
+      const estCover=pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90;
+      const refPrice=coverPrice||estCover;
 
-      /* gera preços estimados por loja baseado no preço de referência */
-      const storePrices = STORES.map(s=>{
-        /* se a API retornou preço online (geralmente Amazon/Google Play), usa como base */
-        const base = onlinePrice || refPrice;
-        /* aplica variação típica de cada loja ±5% para parecer mais real */
-        const rawPrice = base * (1 - s.discount) * (0.95 + Math.random()*0.10);
-        return {
-          ...s,
-          price: Math.round(rawPrice*10)/10,
-          offPct: Math.round(s.discount*100),
-          isEstimate: !onlinePrice,
-          href: s.searchFn(title, info.authors?.[0]||''),
-        };
+      const storePrices=STORES.map(s=>{
+        const base=onlinePrice||refPrice;
+        const raw=base*(1-s.discount)*(0.93+Math.random()*.14);
+        return{...s,price:Math.round(raw*10)/10,offPct:Math.round(s.discount*100),
+               isEstimate:!onlinePrice,href:s.fn(title,info.authors?.[0]||'')};
       }).sort((a,b)=>a.price-b.price);
 
-      const bestPrice = storePrices[0].price;
-      const discount  = Math.round((1-bestPrice/refPrice)*100);
-      const economy   = Math.round((refPrice-bestPrice)*100)/100;
+      const bestPrice=storePrices[0].price;
+      const discount=Math.round((1-bestPrice/refPrice)*100);
+      const economy=Math.round((refPrice-bestPrice)*100)/100;
 
-      allBooks.push({
-        title,
+      allBooks.push({title,
         author:info.authors?info.authors.slice(0,2).join(', '):'Autor desconhecido',
         year:info.publishedDate?info.publishedDate.split('-')[0]:'',
         cover:(info.imageLinks?.thumbnail||'').replace('http://','https://'),
-        refPrice, coverPrice, onlinePrice, hasPriceData,
-        storePrices, bestPrice, discount, economy,
-        source:'google',
-      });
-    });
-
-    /* Open Library supplement */
-    if(olData.docs) olData.docs.slice(0,8).forEach(b=>{
-      const title=(b.title||'').trim();
-      if(!title||seen.has(title.toLowerCase())) return;
-      seen.add(title.toLowerCase());
-      const refPrice=49.90;
-      const storePrices=STORES.map(s=>({
-        ...s,
-        price:Math.round(refPrice*(1-s.discount)*10)/10,
-        offPct:Math.round(s.discount*100),
-        isEstimate:true,
-        href:s.searchFn(title,''),
-      })).sort((a,b)=>a.price-b.price);
-      allBooks.push({
-        title,
-        author:b.author_name?b.author_name.slice(0,2).join(', '):'Autor desconhecido',
-        year:b.first_publish_year||'',
-        cover:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:'',
-        refPrice, coverPrice:null, onlinePrice:null, hasPriceData:false,
-        storePrices, bestPrice:storePrices[0].price,
-        discount:Math.round((1-storePrices[0].price/refPrice)*100),
-        economy:Math.round((refPrice-storePrices[0].price)*100)/100,
-        source:'openlibrary',
+        refPrice,hasPriceData:!!(coverPrice||onlinePrice),
+        storePrices,bestPrice,discount,economy,
+        genreColor:genre.color,
       });
     });
 
@@ -426,24 +449,24 @@ async function fetchBooks(query,page=0){
     if(!allBooks.length){document.getElementById('emptyState').style.display='block';return}
 
     renderBooks(currentSort);
-    document.getElementById('resCount').innerHTML=`<strong>${totalResults.toLocaleString('pt-BR')}</strong> livros · "<strong>${currentQuery}</strong>"`;
+    document.getElementById('resCount').innerHTML=`<strong>${totalResults.toLocaleString('pt-BR')}</strong> livros em <strong>${genre.icon} ${genre.name}</strong>${subFilter?` › ${subFilter}`:''}`;
     document.getElementById('resHeader').style.display='flex';
     document.getElementById('pagination').style.display='flex';
     document.getElementById('btnPrev').disabled=page===0;
     document.getElementById('btnNext').disabled=allBooks.length<10;
-    fetchAI(query,allBooks.slice(0,5));
+
+    fetchAI(genre.name,subFilter,allBooks.slice(0,5));
 
   }catch(err){
     console.error(err);
     grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Erro na busca. Tente novamente.</div>`;
   }finally{
     isLoading=false;
-    document.getElementById('btnSearch').disabled=false;
     document.getElementById('statusBar').style.display='none';
   }
 }
 
-/* ─── SORT & RENDER ─── */
+/* ══════════════════════════════════════════════════════ SORT + RENDER */
 function sortBy(type){
   currentSort=type;
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
@@ -451,58 +474,48 @@ function sortBy(type){
   renderBooks(type);
 }
 function renderBooks(sort){
-  const sorted=[...allBooks];
-  if(sort==='discount') sorted.sort((a,b)=>b.discount-a.discount);
-  else if(sort==='price') sorted.sort((a,b)=>a.bestPrice-b.bestPrice);
-  else if(sort==='new') sorted.sort((a,b)=>(b.year||0)-(a.year||0));
-  const grid=document.getElementById('grid');
-  grid.innerHTML='';
-  sorted.forEach((book,i)=>{grid.appendChild(buildCard(book,i))});
+  const s=[...allBooks];
+  if(sort==='discount')    s.sort((a,b)=>b.discount-a.discount);
+  else if(sort==='price')  s.sort((a,b)=>a.bestPrice-b.bestPrice);
+  else if(sort==='new')    s.sort((a,b)=>(b.year||0)-(a.year||0));
+  document.getElementById('grid').innerHTML='';
+  s.forEach((book,i)=>document.getElementById('grid').appendChild(buildCard(book,i)));
 }
 
-/* ─── VERDICT ─── */
+/* ══════════════════════════════════════════════════════ VERDICT */
 function getVerdict(d){
-  if(d>=40) return{cls:'v-hot', icon:'🔥',text:'Ótima promoção!'}
-  if(d>=25) return{cls:'v-good',icon:'✅',text:'Bom desconto'}
-  if(d>=10) return{cls:'v-avg', icon:'💜',text:'Desconto médio'}
+  if(d>=40)return{cls:'v-hot', icon:'🔥',text:'Ótima promoção!'}
+  if(d>=25)return{cls:'v-good',icon:'✅',text:'Bom desconto'}
+  if(d>=10)return{cls:'v-avg', icon:'💜',text:'Desconto médio'}
   return{cls:'v-skip',icon:'⚠️',text:'Preço normal'}
 }
 
-/* ─── BUILD CARD ─── */
+/* ══════════════════════════════════════════════════════ BUILD CARD */
 function buildCard(book,idx){
   const v=getVerdict(book.discount);
+  const allEst=book.storePrices.every(s=>s.isEstimate);
+  const barPct=Math.min(book.discount,100);
+  const barColor=book.discount>=40?'#34d399':book.discount>=25?'#fbbf24':'#c084fc';
+
   const coverHtml=book.cover
     ?`<img class="book-cover" src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cover-ph" style="display:none">${esc(book.title)}</div>`
     :`<div class="cover-ph">${esc(book.title)}</div>`;
 
-  /* preço de referência display */
-  const pRef   = fmt(book.refPrice);
-  const pBest  = fmt(book.bestPrice);
-  const pEcon  = fmt(book.economy);
-  const allEstimate = book.storePrices.every(s=>s.isEstimate);
-
-  /* store price rows */
-  const storeRows = book.storePrices.map((s,i)=>{
-    const isBest = i===0;
-    return `<a href="${s.href}" target="_blank" class="sp-row${isBest?' cheapest':''}">
+  const storeRows=book.storePrices.map((s,i)=>`
+    <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}">
       <div class="sp-left">
         <div class="sp-dot" style="background:${s.color}"></div>
-        <span class="sp-name">${s.name}${s.label?` <span style="font-size:10px;opacity:.6">${s.label}</span>`:''}${isBest?` <span class="sp-best-tag">MENOR PREÇO</span>`:''}</span>
+        <span class="sp-name">${s.name}${s.label?` <span style="font-size:10px;opacity:.55">${s.label}</span>`:''}${i===0?` <span class="sp-best-tag">MENOR PREÇO</span>`:''}</span>
       </div>
       <div class="sp-right">
-        <span class="sp-price" ${isBest?'':''}>R$ ${fmt(s.price)}</span>
+        <span class="sp-price">R$ ${fmt(s.price)}</span>
         <span class="sp-off">-${s.offPct}%${s.isEstimate?' *':''}</span>
       </div>
-    </a>`;
-  }).join('');
-
-  /* savings bar */
-  const barPct=Math.min(book.discount,100);
-  const barColor=book.discount>=40?'#34d399':book.discount>=25?'#fbbf24':'#c084fc';
+    </a>`).join('');
 
   const card=document.createElement('div');
   card.className='book-card';
-  card.style.animationDelay=`${idx*0.04}s`;
+  card.style.animationDelay=`${idx*.04}s`;
   card.innerHTML=`
     <div class="card-top">
       <div class="cover-wrap">
@@ -512,7 +525,7 @@ function buildCard(book,idx){
       <div class="card-info">
         <div class="book-title">${esc(book.title)}</div>
         <div class="book-author">${esc(book.author)}</div>
-        ${book.year?`<div class="book-year">${book.year}</div>`:''}
+        ${book.year?`<div class="book-year" style="color:${book.genreColor}">${book.year}</div>`:''}
         <div class="verdict ${v.cls}">${v.icon} ${v.text}</div>
       </div>
     </div>
@@ -520,25 +533,23 @@ function buildCard(book,idx){
       <div class="comp-header">
         <span style="font-size:13px">📊</span>
         <span class="comp-header-title">Comparativo de preços</span>
-        ${allEstimate?`<span style="font-size:10px;color:var(--yellow);margin-left:auto">* estimativas</span>`:`<span style="font-size:10px;color:var(--green);margin-left:auto">dados reais ✓</span>`}
+        <span style="font-size:10px;margin-left:auto;color:${allEst?'var(--yellow)':'var(--green)'}">${allEst?'* estimativas':'dados reais ✓'}</span>
       </div>
-
       <div class="price-summary">
         <div class="ps-block">
           <span class="ps-label">Preço de capa</span>
-          <span class="ps-val-strike">R$ ${pRef}</span>
+          <span class="ps-val-strike">R$ ${fmt(book.refPrice)}</span>
         </div>
         <div class="ps-divider"></div>
         <div class="ps-block">
           <span class="ps-label">Menor preço</span>
-          <span class="ps-val-best">R$ ${pBest}</span>
+          <span class="ps-val-best">R$ ${fmt(book.bestPrice)}</span>
         </div>
         <div class="discount-pill">-${book.discount}%</div>
-        <div class="economy-chip">↓ R$ ${pEcon}</div>
+        <div class="economy-chip">↓ R$ ${fmt(book.economy)}</div>
       </div>
-
       <div class="store-prices">
-        <div class="sp-title"><span>🏪</span> Preço em cada loja — clique para comprar</div>
+        <div class="sp-title"><span>🏪</span> Preço por loja — clique para comprar</div>
         ${storeRows}
       </div>
       <div class="sp-bar-wrap">
@@ -550,32 +561,33 @@ function buildCard(book,idx){
   return card;
 }
 
-/* ─── AI ─── */
-async function fetchAI(query,books){
+/* ══════════════════════════════════════════════════════ AI INSIGHT */
+async function fetchAI(genreName,sub,books){
   try{
-    const list=books.map(b=>`"${b.title}": capa R$${fmt(b.refPrice)} → menor preço R$${fmt(b.bestPrice)} na ${b.storePrices[0]?.name} (-${b.discount}%)`).join(' | ');
+    const list=books.map(b=>`"${b.title}" — menor preço R$${fmt(b.bestPrice)} na ${b.storePrices[0]?.name} (-${b.discount}%)`).join(' | ');
+    const ctx=sub?`${genreName} › ${sub}`:genreName;
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:220,
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,
         messages:[{role:'user',content:
-          `Analise esses preços de livros de romance (busca: "${query}"): ${list}.
-          Responda em 2-3 frases CURTAS e diretas em português BR:
+          `Analise preços de livros do gênero "${ctx}": ${list}.
+          Responda em 2 frases diretas em português BR:
           1) Qual o melhor negócio e quanto economiza
-          2) Dica sobre quando comprar (agora vs esperar promoção)
-          Sem markdown. Sem emojis excessivos.`}]})
+          2) Dica rápida sobre o gênero: onde costuma ter mais desconto nesse tipo de livro
+          Sem markdown.`}]})
     });
-    const data=await res.json();
-    const txt=data.content?.[0]?.text;
+    const d=await res.json();
+    const txt=d.content?.[0]?.text;
     if(txt){document.getElementById('aiText').textContent=txt;document.getElementById('aiBox').style.display='block'}
   }catch(e){}
 }
 
-/* ─── UTILS ─── */
+/* ══════════════════════════════════════════════════════ UTILS */
 function fmt(n){return n!=null?n.toFixed(2).replace('.',','):'—'}
 function enc(s){return encodeURIComponent(s||'')}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function prevPage(){if(currentPage>0){doSearch(currentPage-1);window.scrollTo({top:0,behavior:'smooth'})}}
-function nextPage(){doSearch(currentPage+1);window.scrollTo({top:0,behavior:'smooth'})}
+function prevPage(){if(currentPage>0){currentPage--;fetchBooks(activeGenre,activeSubFilter,activeLang,currentPage);window.scrollTo({top:0,behavior:'smooth'})}}
+function nextPage(){currentPage++;fetchBooks(activeGenre,activeSubFilter,activeLang,currentPage);window.scrollTo({top:0,behavior:'smooth'})}
 </script>
 </body>
 </html>
