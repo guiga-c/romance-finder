@@ -168,7 +168,7 @@
 </main>
 
 <footer>
-  Romance Finder · Livros físicos via Open Library & Google Books
+  Romance Finder · Livros novos · Open Library & Google Books
   <br><span class="disclaimer">⚠️ Preços marcados * são estimativas baseadas em descontos típicos — clique para confirmar na loja</span>
 </footer>
 
@@ -273,13 +273,18 @@ const GENRES = [
     ]},
 ];
 
-/* ══ STORES ══ */
+/* ══ STORES — somente livros NOVOS ══ */
 const STORES = [
-  {id:'amazon',  name:'Amazon',          color:'#fbbf24', disc:.28, label:'',        fn:(t,a)=>`https://www.amazon.com.br/s?k=${eu(t+' '+a)}&i=stripbooks&s=price-asc-rank`},
-  {id:'estante', name:'Estante Virtual', color:'#34d399', disc:.55, label:'(usado)', fn:(t)=>`https://www.estantevirtual.com.br/busca?q=${eu(t)}&order=price_asc`},
-  {id:'ameri',   name:'Americanas',      color:'#f87171', disc:.22, label:'',        fn:(t)=>`https://www.americanas.com.br/busca/${eu(t)}?sortBy=priceAsc`},
-  {id:'saraiva', name:'Saraiva',         color:'#60a5fa', disc:.18, label:'',        fn:(t)=>`https://www.saraiva.com.br/pesquisa/?q=${eu(t)}`},
-  {id:'magalu',  name:'Magalu',          color:'#818cf8', disc:.20, label:'',        fn:(t)=>`https://www.magazineluiza.com.br/busca/${eu(t)}/?filters=category---LI`},
+  // Amazon: filtro condição=Novo (p_n_condition-type:6461716011) + livros + menor preço
+  {id:'amazon',  name:'Amazon',      color:'#fbbf24', disc:.28, fn:(t,a)=>`https://www.amazon.com.br/s?k=${eu(t+' '+a)}&i=stripbooks&rh=p_n_condition-type%3A6461716011&s=price-asc-rank`},
+  // Americanas: busca livros novos ordenado por menor preço
+  {id:'ameri',   name:'Americanas',  color:'#f87171', disc:.22, fn:(t)=>`https://www.americanas.com.br/busca/${eu(t)}?sortBy=priceAsc&condition=new`},
+  // Saraiva: todos os resultados são livros novos
+  {id:'saraiva', name:'Saraiva',     color:'#60a5fa', disc:.18, fn:(t)=>`https://www.saraiva.com.br/pesquisa/?q=${eu(t)}`},
+  // Magalu: categoria livros novos
+  {id:'magalu',  name:'Magalu',      color:'#818cf8', disc:.20, fn:(t)=>`https://www.magazineluiza.com.br/busca/${eu(t)}/?filters=category---LI`},
+  // Travessa: livraria especializada, só livros novos
+  {id:'travessa',name:'Travessa',    color:'#a78bfa', disc:.15, fn:(t)=>`https://www.travessa.com.br/busca?q=${eu(t)}&tipo=livros&ordenar=preco_asc`},
 ];
 
 /* ══ STATE ══ */
@@ -518,7 +523,6 @@ function buildCard(book,idx){
       <div class="sp-left">
         <div class="sp-dot" style="background:${s.color}"></div>
         <span class="sp-name">${s.name}
-          ${s.label?`<span style="font-size:10px;opacity:.55">${s.label}</span>`:''}
           ${i===0?`<span class="best-tag">MENOR PREÇO</span>`:''}</span>
       </div>
       <div class="sp-right">
