@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Romance Finder · Compare preços de livros</title>
+  <meta name="description" content="Busque livros de romance e compare preços nas principais livrarias do Brasil: Amazon, Estante Virtual, Saraiva, Martins Fontes e mais." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-bg-circle hero-bg-left"></div>
+      <div class="hero-bg-circle hero-bg-right"></div>
+      <div class="hero-content">
+        <span class="hero-tag">📚 Comparador de preços</span>
+        <h1>Encontre seu próximo<br><em>romance favorito</em></h1>
+        <p class="hero-sub">Busca em múltiplas livrarias · Melhores preços · IA integrada</p>
+        <div class="search-box">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Título, autor ou tema… ex: Colleen Hoover"
+            autocomplete="off"
+            aria-label="Buscar livros de romance"
+          />
+          <button class="btn-search" id="searchBtn" onclick="doSearch()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Buscar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- FILTROS -->
+    <nav class="filters" aria-label="Filtros de subgênero">
+      <button class="filter-chip active" onclick="setFilter('romance', this)">Romance</button>
+      <button class="filter-chip" onclick="setFilter('romance historico', this)">Histórico</button>
+      <button class="filter-chip" onclick="setFilter('romance contemporaneo', this)">Contemporâneo</button>
+      <button class="filter-chip" onclick="setFilter('romance suspense', this)">Suspense Romântico</button>
+      <button class="filter-chip" onclick="setFilter('romance fantastico', this)">Fantasia Romântica</button>
+      <button class="filter-chip" onclick="setFilter('colleen hoover romance', this)">BookTok</button>
+      <button class="filter-chip" onclick="setFilter('chick lit romance', this)">Chick Lit</button>
+      <button class="filter-chip" onclick="setFilter('romance erotico', this)">Adulto</button>
+    </nav>
+
+    <!-- LOJAS -->
+    <section aria-label="Selecione as lojas para buscar">
+      <h2 class="section-title">Buscar nas lojas</h2>
+      <div class="stores-grid" id="storesGrid">
+        <button class="store-card selected" data-store="amazon" onclick="toggleStore(this)" aria-pressed="true">
+          <div class="store-icon">📦</div>
+          <div class="store-name">Amazon BR</div>
+          <div class="store-badge">Prime · Frete grátis</div>
+        </button>
+        <button class="store-card selected" data-store="estante" onclick="toggleStore(this)" aria-pressed="true">
+          <div class="store-icon">📖</div>
+          <div class="store-name">Estante Virtual</div>
+          <div class="store-badge">Novos e usados</div>
+        </button>
+        <button class="store-card selected" data-store="saraiva" onclick="toggleStore(this)" aria-pressed="true">
+          <div class="store-icon">🏛️</div>
+          <div class="store-name">Saraiva</div>
+          <div class="store-badge">Descontos até 45%</div>
+        </button>
+        <button class="store-card selected" data-store="martins" onclick="toggleStore(this)" aria-pressed="true">
+          <div class="store-icon">🎭</div>
+          <div class="store-name">Martins Fontes</div>
+          <div class="store-badge">Maior acervo</div>
+        </button>
+        <button class="store-card" data-store="americanas" onclick="toggleStore(this)" aria-pressed="false">
+          <div class="store-icon">🛒</div>
+          <div class="store-name">Americanas</div>
+          <div class="store-badge">Cashback</div>
+        </button>
+        <button class="store-card" data-store="magalu" onclick="toggleStore(this)" aria-pressed="false">
+          <div class="store-icon">💙</div>
+          <div class="store-name">Magalu</div>
+          <div class="store-badge">App exclusivo</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- CURADORIA IA -->
+    <div id="aiSection" class="ai-section" style="display:none" aria-live="polite">
+      <div class="ai-header">
+        <span class="ai-badge">✨ IA</span>
+        <span class="ai-title">Curadoria inteligente</span>
+      </div>
+      <div class="ai-content" id="aiContent">
+        <div class="ai-loading" aria-label="Carregando curadoria">
+          <span class="ai-dot"></span>
+          <span class="ai-dot"></span>
+          <span class="ai-dot"></span>
+          <span>Analisando os resultados...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <h2 class="section-title" id="resultsTitle" style="display:none">Resultados encontrados</h2>
+
+    <main class="results-area" id="resultsArea" aria-live="polite">
+      <div class="empty-state">
+        <div class="empty-icon">💕</div>
+        <h2 class="empty-title">Qual romance você procura?</h2>
+        <p class="empty-sub">Digite um título, autor ou tema acima para começar a busca</p>
+        <div class="suggestions" role="list">
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Colleen Hoover')">Colleen Hoover</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Nicholas Sparks')">Nicholas Sparks</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Jane Austen romance')">Jane Austen</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Nora Roberts')">Nora Roberts</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('livros mais vendidos romance 2024')">Mais vendidos 2024</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Cecelia Ahern')">Cecelia Ahern</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Emily Henry romance')">Emily Henry</button>
+          <button class="suggestion-chip" role="listitem" onclick="quickSearch('romance historico bestseller')">Romances históricos</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Romance Finder · Dados via <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a> &amp; <a href="https://books.google.com" target="_blank" rel="noopener">Google Books</a> · IA por <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a></p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
