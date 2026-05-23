@@ -3,133 +3,796 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Romance Finder · Compare preços de livros</title>
-  <meta name="description" content="Busque livros de romance e compare preços nas principais livrarias do Brasil: Amazon, Estante Virtual, Saraiva, Martins Fontes e mais." />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <title>Romance Finder — Melhores Preços</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0a0e;
+      --surface: #16121a;
+      --surface2: #1e1825;
+      --border: rgba(255,255,255,0.07);
+      --accent: #e8857a;
+      --accent2: #b57bee;
+      --text: #f0eaf5;
+      --muted: #8a7d95;
+      --card-hover: #211c29;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* BACKGROUND */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(181,123,238,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(232,133,122,0.10) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    .logo-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid rgba(181,123,238,0.3);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #f0eaf5 30%, #b57bee 70%, #e8857a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    /* SEARCH BOX */
+    .search-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid rgba(181,123,238,0.25);
+      border-radius: 16px;
+      padding: 6px 6px 6px 20px;
+      gap: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: rgba(181,123,238,0.6);
+      box-shadow: 0 0 0 3px rgba(181,123,238,0.1), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .search-box input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      padding: 8px 0;
+    }
+
+    .search-box input::placeholder { color: var(--muted); }
+
+    .btn-search {
+      background: linear-gradient(135deg, #b57bee, #e8857a);
+      border: none;
+      border-radius: 11px;
+      padding: 12px 28px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-search:hover { opacity: 0.88; transform: scale(0.98); }
+    .btn-search:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* FILTERS */
+    .filters {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin: 16px auto 0;
+      padding: 0 20px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 12px;
+      font-weight: 400;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover, .chip.active {
+      border-color: rgba(181,123,238,0.5);
+      background: rgba(181,123,238,0.12);
+      color: var(--accent2);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 50px auto 0;
+      padding: 0 20px 80px;
+    }
+
+    /* STATUS BAR */
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    /* BOOK CARD */
+    .book-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(181,123,238,0.35);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      background: var(--card-hover);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .book-cover {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      background: var(--surface2);
+    }
+
+    .cover-placeholder {
+      width: 100%;
+      aspect-ratio: 2/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--surface2), #2a2035);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      padding: 16px;
+    }
+
+    .book-body { padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+    .book-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .book-author {
+      font-size: 12px;
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .book-year {
+      font-size: 11px;
+      color: var(--accent2);
+      font-weight: 500;
+      margin-top: auto;
+    }
+
+    .book-links {
+      padding: 10px 14px 14px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .store-btn {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .store-btn:hover { opacity: 0.8; }
+
+    .store-amazon { background: rgba(255,153,0,0.15); color: #ffa500; border: 1px solid rgba(255,153,0,0.25); }
+    .store-estante { background: rgba(76,175,80,0.15); color: #66bb6a; border: 1px solid rgba(76,175,80,0.25); }
+    .store-saraiva { background: rgba(33,150,243,0.15); color: #42a5f5; border: 1px solid rgba(33,150,243,0.25); }
+    .store-americanas { background: rgba(232,57,57,0.15); color: #ef5350; border: 1px solid rgba(232,57,57,0.25); }
+    .store-magalu { background: rgba(33,150,243,0.12); color: #64b5f6; border: 1px solid rgba(33,150,243,0.2); }
+
+    /* EMPTY STATE */
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      display: none;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .empty h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    .empty p { color: var(--muted); font-size: 14px; }
+
+    /* HERO EMPTY */
+    #hero-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      max-width: 700px;
+      margin: 32px auto 0;
+    }
+
+    .hero-cat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .hero-cat:hover {
+      border-color: rgba(181,123,238,0.4);
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+
+    .hero-cat-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+    .hero-cat-label { font-size: 13px; font-weight: 500; }
+    .hero-cat-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    /* LOADING SKELETON */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* AI INSIGHT BOX */
+    .ai-box {
+      background: var(--surface);
+      border: 1px solid rgba(181,123,238,0.2);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: none;
+    }
+
+    .ai-box-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .ai-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #b57bee, #e8857a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .ai-box p { font-size: 14px; color: #c4b8d0; line-height: 1.7; }
+
+    /* RESULTS COUNT */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .results-count { font-size: 13px; color: var(--muted); }
+    .results-count strong { color: var(--text); }
+
+    /* PAGINATION */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 40px;
+    }
+
+    .btn-page {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-page:hover { border-color: rgba(181,123,238,0.4); background: var(--card-hover); }
+    .btn-page:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+      .hero-categories { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 </head>
 <body>
-  <div class="app">
 
-    <!-- HERO -->
-    <header class="hero">
-      <div class="hero-bg-circle hero-bg-left"></div>
-      <div class="hero-bg-circle hero-bg-right"></div>
-      <div class="hero-content">
-        <span class="hero-tag">📚 Comparador de preços</span>
-        <h1>Encontre seu próximo<br><em>romance favorito</em></h1>
-        <p class="hero-sub">Busca em múltiplas livrarias · Melhores preços · IA integrada</p>
-        <div class="search-box">
-          <input
-            type="text"
-            id="searchInput"
-            class="search-input"
-            placeholder="Título, autor ou tema… ex: Colleen Hoover"
-            autocomplete="off"
-            aria-label="Buscar livros de romance"
-          />
-          <button class="btn-search" id="searchBtn" onclick="doSearch()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            Buscar
-          </button>
-        </div>
+<header>
+  <div class="logo-tag">✦ Romance Finder</div>
+  <h1>Encontre seu próximo<br><em>grande amor</em> literário</h1>
+  <p class="subtitle">Busca em milhões de livros de romance. Compare preços nas melhores lojas do Brasil.</p>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <span style="font-size:18px; opacity:0.4">🔍</span>
+    <input type="text" id="searchInput" placeholder="Título, autor ou tema..." autocomplete="off" />
+    <button class="btn-search" id="btnSearch" onclick="doSearch()">Buscar</button>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="chip active" onclick="setFilter('', this)">Todos</div>
+  <div class="chip" onclick="setFilter('romance contemporâneo', this)">Contemporâneo</div>
+  <div class="chip" onclick="setFilter('romance histórico', this)">Histórico</div>
+  <div class="chip" onclick="setFilter('BookTok romance', this)">BookTok</div>
+  <div class="chip" onclick="setFilter('suspense romântico', this)">Dark Romance</div>
+  <div class="chip" onclick="setFilter('romance fantasy', this)">Fantasia</div>
+  <div class="chip" onclick="setFilter('new adult romance', this)">New Adult</div>
+</div>
+
+<main>
+  <!-- Hero state -->
+  <div id="hero-state">
+    <p style="color: var(--muted); font-size: 14px; margin-bottom: 4px;">Explore por categoria</p>
+    <div class="hero-categories">
+      <div class="hero-cat" onclick="quickSearch('romance contemporâneo bestseller')">
+        <span class="hero-cat-icon">💕</span>
+        <div class="hero-cat-label">Contemporâneo</div>
+        <div class="hero-cat-sub">Histórias do dia a dia</div>
       </div>
-    </header>
-
-    <!-- FILTROS -->
-    <nav class="filters" aria-label="Filtros de subgênero">
-      <button class="filter-chip active" onclick="setFilter('romance', this)">Romance</button>
-      <button class="filter-chip" onclick="setFilter('romance historico', this)">Histórico</button>
-      <button class="filter-chip" onclick="setFilter('romance contemporaneo', this)">Contemporâneo</button>
-      <button class="filter-chip" onclick="setFilter('romance suspense', this)">Suspense Romântico</button>
-      <button class="filter-chip" onclick="setFilter('romance fantastico', this)">Fantasia Romântica</button>
-      <button class="filter-chip" onclick="setFilter('colleen hoover romance', this)">BookTok</button>
-      <button class="filter-chip" onclick="setFilter('chick lit romance', this)">Chick Lit</button>
-      <button class="filter-chip" onclick="setFilter('romance erotico', this)">Adulto</button>
-    </nav>
-
-    <!-- LOJAS -->
-    <section aria-label="Selecione as lojas para buscar">
-      <h2 class="section-title">Buscar nas lojas</h2>
-      <div class="stores-grid" id="storesGrid">
-        <button class="store-card selected" data-store="amazon" onclick="toggleStore(this)" aria-pressed="true">
-          <div class="store-icon">📦</div>
-          <div class="store-name">Amazon BR</div>
-          <div class="store-badge">Prime · Frete grátis</div>
-        </button>
-        <button class="store-card selected" data-store="estante" onclick="toggleStore(this)" aria-pressed="true">
-          <div class="store-icon">📖</div>
-          <div class="store-name">Estante Virtual</div>
-          <div class="store-badge">Novos e usados</div>
-        </button>
-        <button class="store-card selected" data-store="saraiva" onclick="toggleStore(this)" aria-pressed="true">
-          <div class="store-icon">🏛️</div>
-          <div class="store-name">Saraiva</div>
-          <div class="store-badge">Descontos até 45%</div>
-        </button>
-        <button class="store-card selected" data-store="martins" onclick="toggleStore(this)" aria-pressed="true">
-          <div class="store-icon">🎭</div>
-          <div class="store-name">Martins Fontes</div>
-          <div class="store-badge">Maior acervo</div>
-        </button>
-        <button class="store-card" data-store="americanas" onclick="toggleStore(this)" aria-pressed="false">
-          <div class="store-icon">🛒</div>
-          <div class="store-name">Americanas</div>
-          <div class="store-badge">Cashback</div>
-        </button>
-        <button class="store-card" data-store="magalu" onclick="toggleStore(this)" aria-pressed="false">
-          <div class="store-icon">💙</div>
-          <div class="store-name">Magalu</div>
-          <div class="store-badge">App exclusivo</div>
-        </button>
+      <div class="hero-cat" onclick="quickSearch('BookTok romance viral 2024')">
+        <span class="hero-cat-icon">📱</span>
+        <div class="hero-cat-label">BookTok</div>
+        <div class="hero-cat-sub">Viralizou nas redes</div>
       </div>
-    </section>
-
-    <!-- CURADORIA IA -->
-    <div id="aiSection" class="ai-section" style="display:none" aria-live="polite">
-      <div class="ai-header">
-        <span class="ai-badge">✨ IA</span>
-        <span class="ai-title">Curadoria inteligente</span>
+      <div class="hero-cat" onclick="quickSearch('dark romance suspense')">
+        <span class="hero-cat-icon">🌑</span>
+        <div class="hero-cat-label">Dark Romance</div>
+        <div class="hero-cat-sub">Intenso e emocionante</div>
       </div>
-      <div class="ai-content" id="aiContent">
-        <div class="ai-loading" aria-label="Carregando curadoria">
-          <span class="ai-dot"></span>
-          <span class="ai-dot"></span>
-          <span class="ai-dot"></span>
-          <span>Analisando os resultados...</span>
-        </div>
+      <div class="hero-cat" onclick="quickSearch('romance histórico século XIX')">
+        <span class="hero-cat-icon">🏰</span>
+        <div class="hero-cat-label">Histórico</div>
+        <div class="hero-cat-sub">Regência, vitoriano</div>
+      </div>
+      <div class="hero-cat" onclick="quickSearch('romance fantasia magia')">
+        <span class="hero-cat-icon">🔮</span>
+        <div class="hero-cat-label">Fantasia</div>
+        <div class="hero-cat-sub">Mundos mágicos</div>
+      </div>
+      <div class="hero-cat" onclick="quickSearch('Colleen Hoover romance')">
+        <span class="hero-cat-icon">⭐</span>
+        <div class="hero-cat-label">Mais Populares</div>
+        <div class="hero-cat-sub">Colleen Hoover e mais</div>
       </div>
     </div>
-
-    <!-- RESULTADOS -->
-    <h2 class="section-title" id="resultsTitle" style="display:none">Resultados encontrados</h2>
-
-    <main class="results-area" id="resultsArea" aria-live="polite">
-      <div class="empty-state">
-        <div class="empty-icon">💕</div>
-        <h2 class="empty-title">Qual romance você procura?</h2>
-        <p class="empty-sub">Digite um título, autor ou tema acima para começar a busca</p>
-        <div class="suggestions" role="list">
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Colleen Hoover')">Colleen Hoover</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Nicholas Sparks')">Nicholas Sparks</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Jane Austen romance')">Jane Austen</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Nora Roberts')">Nora Roberts</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('livros mais vendidos romance 2024')">Mais vendidos 2024</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Cecelia Ahern')">Cecelia Ahern</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('Emily Henry romance')">Emily Henry</button>
-          <button class="suggestion-chip" role="listitem" onclick="quickSearch('romance historico bestseller')">Romances históricos</button>
-        </div>
-      </div>
-    </main>
-
-    <footer class="footer">
-      <p>Romance Finder · Dados via <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a> &amp; <a href="https://books.google.com" target="_blank" rel="noopener">Google Books</a> · IA por <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a></p>
-    </footer>
   </div>
 
-  <script src="app.js"></script>
+  <!-- Status -->
+  <div class="status" id="statusBar" style="display:none">
+    <div class="status-dot"></div>
+    <span id="statusText">Buscando...</span>
+  </div>
+
+  <!-- AI insight -->
+  <div class="ai-box" id="aiBox">
+    <div class="ai-box-header">
+      <span style="font-size:16px">✨</span>
+      <span class="ai-badge">Curadoria IA</span>
+    </div>
+    <p id="aiText"></p>
+  </div>
+
+  <!-- Results header -->
+  <div class="results-header" id="resultsHeader" style="display:none">
+    <span class="results-count" id="resultsCount"></span>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid"></div>
+
+  <!-- Empty state -->
+  <div class="empty" id="emptyState">
+    <span class="empty-icon">📚</span>
+    <h2>Nenhum livro encontrado</h2>
+    <p>Tente outro título, autor ou tema diferente.</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" id="pagination" style="display:none">
+    <button class="btn-page" id="btnPrev" onclick="prevPage()">← Anterior</button>
+    <button class="btn-page" id="btnNext" onclick="nextPage()">Próxima →</button>
+  </div>
+</main>
+
+<footer>
+  Romance Finder — Dados via Open Library & Google Books · Os preços são verificados nas lojas ao clicar
+</footer>
+
+<script>
+  let currentQuery = '';
+  let currentPage = 0;
+  const PAGE_SIZE = 20;
+  let totalResults = 0;
+  let activeFilter = '';
+  let isLoading = false;
+
+  // Press Enter to search
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  function setFilter(filter, el) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    activeFilter = filter;
+    if (currentQuery || filter) doSearch();
+  }
+
+  function quickSearch(q) {
+    document.getElementById('searchInput').value = q;
+    doSearch();
+  }
+
+  function doSearch(page = 0) {
+    const input = document.getElementById('searchInput').value.trim();
+    const query = activeFilter ? (input ? `${input} ${activeFilter}` : activeFilter) : input;
+    if (!query) return;
+    currentQuery = query;
+    currentPage = page;
+    fetchBooks(query, page);
+  }
+
+  async function fetchBooks(query, page = 0) {
+    if (isLoading) return;
+    isLoading = true;
+
+    document.getElementById('hero-state').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('aiBox').style.display = 'none';
+    document.getElementById('resultsHeader').style.display = 'none';
+    document.getElementById('pagination').style.display = 'none';
+    document.getElementById('statusBar').style.display = 'flex';
+    document.getElementById('btnSearch').disabled = true;
+
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+
+    // Show skeletons
+    for (let i = 0; i < 8; i++) {
+      const sk = document.createElement('div');
+      sk.style.cssText = 'border-radius:16px; overflow:hidden; background:var(--surface);';
+      sk.innerHTML = `
+        <div class="skeleton" style="aspect-ratio:2/3; width:100%"></div>
+        <div style="padding:14px; display:flex; flex-direction:column; gap:8px">
+          <div class="skeleton" style="height:14px; width:80%; border-radius:4px"></div>
+          <div class="skeleton" style="height:12px; width:55%; border-radius:4px"></div>
+        </div>`;
+      grid.appendChild(sk);
+    }
+
+    try {
+      const offset = page * PAGE_SIZE;
+      const encodedQ = encodeURIComponent(query + ' romance');
+
+      // Fetch Open Library
+      document.getElementById('statusText').textContent = 'Buscando no Open Library...';
+      const olUrl = `https://openlibrary.org/search.json?q=${encodedQ}&offset=${offset}&limit=${PAGE_SIZE}&fields=key,title,author_name,first_publish_year,cover_i,subject`;
+      const olRes = await fetch(olUrl);
+      const olData = await olRes.json();
+
+      totalResults = olData.numFound || 0;
+
+      // Fetch Google Books
+      document.getElementById('statusText').textContent = 'Verificando Google Books...';
+      const gbUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodedQ}+subject:romance&startIndex=${offset}&maxResults=10&langRestrict=pt&printType=books`;
+      const gbRes = await fetch(gbUrl);
+      const gbData = await gbRes.json();
+
+      const books = [];
+
+      // Process Open Library
+      if (olData.docs) {
+        olData.docs.forEach(b => {
+          books.push({
+            title: b.title || 'Sem título',
+            author: b.author_name ? b.author_name.slice(0, 2).join(', ') : 'Autor desconhecido',
+            year: b.first_publish_year || '',
+            cover: b.cover_i ? `https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg` : null,
+            source: 'open-library'
+          });
+        });
+      }
+
+      // Process Google Books (deduplicate by title)
+      if (gbData.items) {
+        gbData.items.forEach(item => {
+          const info = item.volumeInfo;
+          const title = info.title || '';
+          if (!books.find(b => b.title.toLowerCase() === title.toLowerCase())) {
+            books.push({
+              title: title,
+              author: info.authors ? info.authors.slice(0, 2).join(', ') : 'Autor desconhecido',
+              year: info.publishedDate ? info.publishedDate.split('-')[0] : '',
+              cover: info.imageLinks?.thumbnail?.replace('http://', 'https://') || null,
+              source: 'google-books'
+            });
+          }
+        });
+      }
+
+      grid.innerHTML = '';
+
+      if (books.length === 0) {
+        document.getElementById('emptyState').style.display = 'block';
+        document.getElementById('statusBar').style.display = 'none';
+        return;
+      }
+
+      books.forEach((book, i) => {
+        const card = buildCard(book, i);
+        grid.appendChild(card);
+      });
+
+      // Show results info
+      document.getElementById('resultsCount').innerHTML = `<strong>${totalResults.toLocaleString('pt-BR')}</strong> resultados para "<strong>${currentQuery}</strong>"`;
+      document.getElementById('resultsHeader').style.display = 'flex';
+
+      // Pagination
+      document.getElementById('pagination').style.display = 'flex';
+      document.getElementById('btnPrev').disabled = page === 0;
+      document.getElementById('btnNext').disabled = books.length < PAGE_SIZE;
+
+      // AI insight (async, non-blocking)
+      document.getElementById('statusText').textContent = 'Gerando curadoria IA...';
+      fetchAIInsight(query, books.slice(0, 5));
+
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--muted)">
+        Erro ao buscar. Verifique sua conexão e tente novamente.
+      </div>`;
+    } finally {
+      isLoading = false;
+      document.getElementById('btnSearch').disabled = false;
+      document.getElementById('statusBar').style.display = 'none';
+    }
+  }
+
+  function buildCard(book, index) {
+    const q = encodeURIComponent(book.title + ' ' + book.author);
+    const qTitle = encodeURIComponent(book.title);
+
+    const stores = [
+      { label: 'Amazon', cls: 'store-amazon', href: `https://www.amazon.com.br/s?k=${q}&i=stripbooks` },
+      { label: 'Estante', cls: 'store-estante', href: `https://www.estantevirtual.com.br/busca?q=${qTitle}` },
+      { label: 'Saraiva', cls: 'store-saraiva', href: `https://www.saraiva.com.br/pesquisa/?q=${qTitle}` },
+      { label: 'Americanas', cls: 'store-americanas', href: `https://www.americanas.com.br/busca/${qTitle}` },
+      { label: 'Magalu', cls: 'store-magalu', href: `https://www.magazineluiza.com.br/busca/${qTitle}/` },
+    ];
+
+    const card = document.createElement('div');
+    card.className = 'book-card';
+    card.style.animationDelay = `${index * 0.04}s`;
+
+    let coverHtml = book.cover
+      ? `<img class="book-cover" src="${book.cover}" alt="${escHtml(book.title)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=cover-placeholder>${escHtml(book.title)}</div>'">`
+      : `<div class="cover-placeholder">${escHtml(book.title)}</div>`;
+
+    card.innerHTML = `
+      ${coverHtml}
+      <div class="book-body">
+        <div class="book-title">${escHtml(book.title)}</div>
+        <div class="book-author">${escHtml(book.author)}</div>
+        ${book.year ? `<div class="book-year">${book.year}</div>` : ''}
+      </div>
+      <div class="book-links">
+        ${stores.map(s => `<a href="${s.href}" target="_blank" class="store-btn ${s.cls}">${s.label}</a>`).join('')}
+      </div>`;
+
+    return card;
+  }
+
+  async function fetchAIInsight(query, books) {
+    try {
+      const bookList = books.map(b => `"${b.title}" de ${b.author}`).join(', ');
+      const prompt = `Você é um curador de livros de romance entusiasta. Em 2-3 frases diretas, 
+      diga algo útil e instigante sobre os resultados para "${query}". 
+      Mencione um ou dois títulos da lista se fizer sentido: ${bookList}. 
+      Inclua uma dica de onde costuma ser mais barato comprar livros de romance no Brasil. 
+      Seja conversacional e animado, em português brasileiro.`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 200,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const data = await res.json();
+      const text = data.content?.[0]?.text;
+      if (text) {
+        document.getElementById('aiText').textContent = text;
+        document.getElementById('aiBox').style.display = 'block';
+      }
+    } catch (e) {
+      // AI insight is optional — silently ignore if fails
+    }
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function prevPage() {
+    if (currentPage > 0) doSearch(currentPage - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextPage() {
+    doSearch(currentPage + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
 </body>
 </html>
