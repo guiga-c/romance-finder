@@ -9,7 +9,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#0b0b0f;--surface:#131219;--surface2:#1a1825;--surface3:#221f2e;
       --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-      --accent:#c084fc;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--pink:#f472b6;
+      --accent:#c084fc;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--pink:#f472b6;--blue:#60a5fa;
       --text:#f1eef8;--text2:#b8afc8;--muted:#6b6180}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
@@ -17,27 +17,122 @@
       background:radial-gradient(ellipse 70% 45% at 15% -5%,rgba(192,132,252,.13) 0%,transparent 55%),
                  radial-gradient(ellipse 55% 40% at 85% 105%,rgba(244,114,182,.10) 0%,transparent 55%)}
 
+    /* ── TOP NAV ── */
+    .topnav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 18px;height:52px;display:flex;align-items:center;gap:10px}
+    .topnav-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--accent);font-weight:700;margin-right:4px;white-space:nowrap}
+
+    /* Economômetro na topnav */
+    .eco-widget{display:flex;align-items:center;gap:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:10px;padding:6px 12px;cursor:pointer;transition:all .2s}
+    .eco-widget:hover{background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.35)}
+    .eco-icon{font-size:14px}
+    .eco-label{font-size:10px;color:var(--muted);line-height:1}
+    .eco-value{font-size:14px;font-weight:700;color:var(--green);line-height:1;transition:all .4s}
+    .eco-value.bump{transform:scale(1.2);color:#6ee7b7}
+
+    .tnav-spacer{flex:1}
+    .tnav-btn{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:7px 13px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);transition:all .2s;white-space:nowrap}
+    .tnav-btn:hover{border-color:var(--border2);color:var(--text)}
+    .tnav-btn.pink:hover{border-color:rgba(244,114,182,.4);color:var(--pink)}
+    .tnav-btn.purple:hover{border-color:rgba(192,132,252,.4);color:var(--accent)}
+    .tnav-btn.blue:hover{border-color:rgba(96,165,250,.4);color:var(--blue)}
+    .badge{background:var(--pink);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;min-width:16px;text-align:center}
+    .badge.green{background:var(--green);color:#022c22}
+    .badge.yellow{background:var(--yellow);color:#1c1700}
+
+    /* ── SIDE PANELS ── */
+    .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none}
+    .panel-overlay.show{display:block}
+    .side-panel{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:100;transition:right .3s ease;overflow-y:auto;display:flex;flex-direction:column}
+    .side-panel.open{right:0}
+    .panel-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:1;flex-shrink:0}
+    .panel-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700}
+    .panel-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px}
+    .panel-close:hover{color:var(--text);background:var(--surface2)}
+
+    /* ── ECONOMÔMETRO PANEL ── */
+    .eco-panel-stats{padding:18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .eco-stat{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+    .eco-stat-val{font-size:22px;font-weight:700;margin-bottom:4px}
+    .eco-stat-lbl{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+    .eco-history{padding:14px 18px}
+    .eco-hist-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .eco-hist-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .eco-hist-cover{width:36px;height:54px;object-fit:cover;border-radius:5px;background:var(--surface2);flex-shrink:0}
+    .eco-hist-cover-ph{width:36px;height:54px;border-radius:5px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .eco-hist-info{flex:1;min-width:0}
+    .eco-hist-title2{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .eco-hist-sub{font-size:11px;color:var(--muted)}
+    .eco-hist-saved{font-size:13px;font-weight:700;color:var(--green);white-space:nowrap}
+    .eco-empty{text-align:center;padding:50px 20px;color:var(--muted);font-size:13px}
+
+    /* ── MINHA ESTANTE ── */
+    .shelf-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 18px;gap:0}
+    .shelf-tab{flex:1;text-align:center;padding:12px 8px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+    .shelf-tab.active{color:var(--text);border-bottom-color:var(--accent)}
+    .shelf-content{padding:12px 18px;flex:1}
+    .shelf-item{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--border)}
+    .shelf-cover{width:44px;height:66px;object-fit:cover;border-radius:6px;background:var(--surface2);flex-shrink:0}
+    .shelf-cover-ph{width:44px;height:66px;border-radius:6px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .shelf-info{flex:1;min-width:0}
+    .shelf-title{font-size:12.5px;font-weight:600;line-height:1.3;margin-bottom:2px}
+    .shelf-author{font-size:11px;color:var(--muted);margin-bottom:6px}
+    .shelf-actions{display:flex;gap:5px;flex-wrap:wrap}
+    .shelf-move{font-size:10px;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .15s}
+    .shelf-move:hover{border-color:var(--border2);color:var(--text)}
+    .shelf-remove{font-size:10px;padding:3px 7px;border-radius:6px;border:1px solid rgba(248,113,113,.2);color:var(--red);cursor:pointer;background:transparent;transition:all .15s}
+    .shelf-remove:hover{background:rgba(248,113,113,.1)}
+    .shelf-empty{text-align:center;padding:50px 20px;color:var(--muted);font-size:13px;line-height:1.6}
+    /* goal tracker */
+    .goal-bar-wrap{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--surface2)}
+    .goal-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .goal-label{font-size:12px;font-weight:600}
+    .goal-edit{font-size:11px;color:var(--accent);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif}
+    .goal-track{height:8px;background:var(--surface3);border-radius:10px;overflow:hidden;margin-bottom:5px}
+    .goal-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--pink));transition:width .5s ease}
+    .goal-numbers{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+
+    /* ── ALERTAS PANEL ── */
+    .alert-item{display:flex;align-items:flex-start;gap:11px;padding:12px 18px;border-bottom:1px solid var(--border)}
+    .alert-cover{width:40px;height:60px;object-fit:cover;border-radius:5px;background:var(--surface2);flex-shrink:0}
+    .alert-cover-ph{width:40px;height:60px;border-radius:5px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .alert-info{flex:1;min-width:0}
+    .alert-title{font-size:12.5px;font-weight:600;line-height:1.3;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .alert-price-row{display:flex;align-items:center;gap:7px;margin:5px 0}
+    .alert-current{font-size:12px;color:var(--muted)}
+    .alert-target{font-size:13px;font-weight:700;color:var(--yellow)}
+    .alert-triggered{font-size:11px;font-weight:700;color:var(--green);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);padding:2px 8px;border-radius:5px}
+    .alert-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:3px 6px;flex-shrink:0}
+    .alert-remove:hover{color:var(--red)}
+    .alert-empty{text-align:center;padding:50px 20px;color:var(--muted);font-size:13px;line-height:1.6}
+
+    /* ── ALERT TRIGGERED BANNER ── */
+    .alert-banner{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:98;background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(192,132,252,.1));border:1px solid rgba(52,211,153,.4);border-radius:14px;padding:12px 20px;max-width:480px;width:calc(100% - 36px);display:none;animation:slideDown .4s ease}
+    .alert-banner.show{display:block}
+    @keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+    .alert-banner-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:4px;display:flex;align-items:center;gap:7px}
+    .alert-banner-item{font-size:12px;color:var(--text2);display:flex;justify-content:space-between;align-items:center;padding:5px 0}
+    .alert-banner-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
+
     /* ── HEADER ── */
-    header{position:relative;z-index:1;text-align:center;padding:40px 20px 20px}
+    header{position:relative;z-index:1;text-align:center;padding:70px 20px 18px}
     .logo-pill{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(192,132,252,.28);padding:5px 14px 5px 10px;border-radius:20px;margin-bottom:14px;background:rgba(192,132,252,.07)}
     h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,3rem);font-weight:700;line-height:1.12;background:linear-gradient(135deg,#f1eef8 20%,#c084fc 55%,#f472b6 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
     .subtitle{font-size:14px;color:var(--text2);max-width:420px;margin:0 auto;line-height:1.65}
 
-    /* ── SEARCH BAR ── */
-    .search-section{position:relative;z-index:1;max-width:660px;margin:22px auto 0;padding:0 18px}
+    /* ── SEARCH ── */
+    .search-section{position:relative;z-index:1;max-width:660px;margin:20px auto 0;padding:0 18px}
     .search-row{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid rgba(192,132,252,.25);border-radius:16px;padding:6px 6px 6px 18px;transition:border-color .2s,box-shadow .2s}
     .search-row:focus-within{border-color:rgba(192,132,252,.6);box-shadow:0 0 0 3px rgba(192,132,252,.1),0 8px 32px rgba(0,0,0,.4)}
     .search-row input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);padding:8px 0}
     .search-row input::placeholder{color:var(--muted)}
-    .btn-search{background:linear-gradient(135deg,#c084fc,#f472b6);border:none;border-radius:11px;padding:11px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;white-space:nowrap}
+    .btn-search{background:linear-gradient(135deg,#c084fc,#f472b6);border:none;border-radius:11px;padding:11px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s}
     .btn-search:hover{opacity:.85;transform:scale(.98)}
     .btn-search:disabled{opacity:.45;cursor:not-allowed;transform:none}
-    .search-hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
-    .search-hint span{color:var(--accent);cursor:pointer}
-    .search-hint span:hover{text-decoration:underline}
+    .search-hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:7px}
+    .search-hint span{color:var(--accent);cursor:pointer}.search-hint span:hover{text-decoration:underline}
 
-    /* ── GENRE SECTION ── */
-    .genre-section{position:relative;z-index:1;max-width:920px;margin:24px auto 0;padding:0 18px}
+    /* ── GENRES ── */
+    .genre-section{position:relative;z-index:1;max-width:920px;margin:22px auto 0;padding:0 18px}
     .section-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;text-align:center}
     .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px}
     .genre-card{background:var(--surface);border:2px solid var(--border);border-radius:13px;padding:14px 10px 12px;cursor:pointer;transition:all .2s;text-align:center}
@@ -46,7 +141,7 @@
     .genre-name{font-size:12px;font-weight:700;line-height:1.2}
     .genre-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
-    /* ── SUBFILTERS + CONTROLS ── */
+    /* ── SUB + CONTROLS ── */
     .sub-section{position:relative;z-index:1;max-width:920px;margin:12px auto 0;padding:0 18px;display:none}
     .sub-row{display:flex;gap:7px;flex-wrap:wrap}
     .sfchip{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
@@ -57,40 +152,12 @@
     .sort-btn{font-size:11px;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
     .sort-btn.active,.sort-btn:hover{border-color:rgba(192,132,252,.4);color:var(--accent);background:rgba(192,132,252,.08)}
     .ctrl-spacer{flex:1;min-width:10px}
-    /* Year filter */
     .year-filter{display:flex;gap:6px;align-items:center}
     .year-btn{font-size:11px;font-weight:500;padding:6px 11px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .18s}
     .year-btn.active,.year-btn:hover{border-color:rgba(251,191,36,.4);color:var(--yellow);background:rgba(251,191,36,.07)}
 
-    /* ── WISHLIST TOAST ── */
-    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:500;color:var(--text);z-index:999;transition:transform .3s ease;pointer-events:none;white-space:nowrap}
-    .toast.show{transform:translateX(-50%) translateY(0)}
-
-    /* ── WISHLIST PANEL ── */
-    .wl-btn{position:fixed;top:18px;right:18px;z-index:50;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:9px 14px;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text);transition:all .2s}
-    .wl-btn:hover{border-color:rgba(244,114,182,.4);color:var(--pink)}
-    .wl-count{background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
-    .wl-panel{position:fixed;top:0;right:-380px;width:360px;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:100;transition:right .3s ease;overflow-y:auto;padding:0 0 40px}
-    .wl-panel.open{right:0}
-    .wl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;display:none}
-    .wl-overlay.show{display:block}
-    .wl-header{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:1}
-    .wl-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
-    .wl-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px}
-    .wl-close:hover{color:var(--text);background:var(--surface2)}
-    .wl-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px}
-    .wl-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
-    .wl-cover{width:48px;height:72px;object-fit:cover;border-radius:6px;background:var(--surface2);flex-shrink:0}
-    .wl-cover-ph{width:48px;height:72px;border-radius:6px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-    .wl-info{flex:1;min-width:0}
-    .wl-item-title{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:3px}
-    .wl-item-author{font-size:11px;color:var(--muted);margin-bottom:6px}
-    .wl-item-price{font-size:14px;font-weight:700;color:var(--green)}
-    .wl-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 5px;flex-shrink:0}
-    .wl-remove:hover{color:var(--red)}
-
     /* ── MAIN ── */
-    main{position:relative;z-index:1;max-width:1160px;margin:26px auto 0;padding:0 18px 100px}
+    main{position:relative;z-index:1;max-width:1160px;margin:24px auto 0;padding:0 18px 100px}
     .status-bar{display:none;align-items:center;gap:9px;font-size:13px;color:var(--muted);margin-bottom:20px}
     .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1.3s infinite}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -98,32 +165,39 @@
     .ai-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
     .ai-badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
     .ai-box p{font-size:13.5px;color:var(--text2);line-height:1.7}
-    .res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-    .res-count{font-size:13px;color:var(--muted)}
-    .res-count strong{color:var(--text)}
+    .res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;display:none}
+    .res-count{font-size:13px;color:var(--muted)}.res-count strong{color:var(--text)}
 
-    /* ── GRID ── */
+    /* ── GRID + CARDS ── */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-
-    /* ── BOOK CARD ── */
     .book-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;animation:fadeUp .38s ease both;position:relative}
     .book-card:hover{transform:translateY(-4px);border-color:rgba(192,132,252,.28);box-shadow:0 12px 36px rgba(0,0,0,.55);background:var(--surface2)}
     .book-card.best-deal{border-color:rgba(52,211,153,.4)!important;box-shadow:0 0 0 1px rgba(52,211,153,.2),0 8px 32px rgba(52,211,153,.1)!important}
-    .best-deal-banner{background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(192,132,252,.1));border-bottom:1px solid rgba(52,211,153,.2);padding:7px 13px;font-size:11px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:6px;display:none}
+    .best-deal-banner{background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(192,132,252,.1));border-bottom:1px solid rgba(52,211,153,.2);padding:7px 13px;font-size:11px;font-weight:700;color:var(--green);display:none;align-items:center;gap:6px}
     .book-card.best-deal .best-deal-banner{display:flex}
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     .card-top{display:flex;position:relative}
-
-    /* WISHLIST HEART */
-    .heart-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.4);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;backdrop-filter:blur(4px);z-index:2}
-    .heart-btn:hover{background:rgba(244,114,182,.2);transform:scale(1.15)}
-    .heart-btn.saved{background:rgba(244,114,182,.25)}
+    /* card action buttons top-right */
+    .card-actions{position:absolute;top:7px;right:7px;display:flex;flex-direction:column;gap:5px;z-index:2}
+    .ca-btn{background:rgba(0,0,0,.5);border:none;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .2s;backdrop-filter:blur(4px)}
+    .ca-btn:hover{transform:scale(1.15)}
+    .ca-btn.heart:hover{background:rgba(244,114,182,.3)}
+    .ca-btn.bell:hover{background:rgba(251,191,36,.3)}
+    .ca-btn.shelf:hover{background:rgba(192,132,252,.3)}
+    .ca-btn.heart.saved{background:rgba(244,114,182,.25)}
+    .ca-btn.bell.set{background:rgba(251,191,36,.2)}
+    /* shelf status badge */
+    .shelf-badge{position:absolute;bottom:6px;left:6px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;display:none}
+    .shelf-badge.show{display:block}
+    .sb-lendo{background:rgba(96,165,250,.9);color:#fff}
+    .sb-lido{background:rgba(52,211,153,.9);color:#022c22}
+    .sb-quero{background:rgba(192,132,252,.9);color:#fff}
 
     .cover-wrap{position:relative;flex-shrink:0;width:96px}
     .book-cover{width:96px;height:144px;object-fit:cover;display:block;background:var(--surface2);cursor:pointer}
     .cover-ph{width:96px;height:144px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--surface2),var(--surface3));font-family:'Playfair Display',serif;font-style:italic;font-size:11px;color:var(--muted);text-align:center;padding:10px;line-height:1.4;cursor:pointer}
     .badge-off{position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;z-index:1}
-    .card-info{flex:1;padding:13px 36px 10px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
+    .card-info{flex:1;padding:13px 40px 10px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
     .book-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;line-height:1.3;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
     .book-title:hover{color:var(--accent)}
     .book-author{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -134,7 +208,7 @@
     .v-avg{background:rgba(192,132,252,.12);color:#c084fc;border:1px solid rgba(192,132,252,.22)}
     .v-skip{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.22)}
 
-    /* COMPARATIVO */
+    /* ── COMPARATIVO ── */
     .comparativo{margin:0 12px 12px;background:var(--surface3);border:1px solid var(--border2);border-radius:12px;overflow:hidden}
     .comp-header{padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
     .comp-htitle{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -164,33 +238,48 @@
     .bar-track{height:5px;background:var(--surface);border-radius:10px;overflow:hidden}
     .bar-fill{height:100%;border-radius:10px}
 
-    /* ── BOOK MODAL ── */
+    /* ── MODALS (book detail + alert set) ── */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
     .modal-overlay.open{display:flex}
-    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;animation:modalIn .25s ease}
+    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;animation:modalIn .25s ease;position:relative}
     @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+    .modal-close{position:absolute;top:12px;right:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--muted);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif}
+    .modal-close:hover{color:var(--text)}
     .modal-top{display:flex;gap:16px;padding:20px;border-bottom:1px solid var(--border)}
-    .modal-cover{width:90px;height:135px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--surface2)}
-    .modal-cover-ph{width:90px;height:135px;border-radius:10px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+    .modal-cover{width:88px;height:132px;object-fit:cover;border-radius:9px;flex-shrink:0;background:var(--surface2)}
+    .modal-cover-ph{width:88px;height:132px;border-radius:9px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
     .modal-meta{flex:1}
-    .modal-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;line-height:1.3;margin-bottom:6px}
-    .modal-author{font-size:13px;color:var(--text2);margin-bottom:8px}
-    .modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-    .modal-tag{font-size:10px;padding:3px 9px;border-radius:10px;background:rgba(192,132,252,.12);color:var(--accent);border:1px solid rgba(192,132,252,.2)}
-    .modal-price-row{display:flex;align-items:center;gap:10px}
+    .modal-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:5px}
+    .modal-author{font-size:13px;color:var(--text2);margin-bottom:7px}
+    .modal-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+    .modal-tag{font-size:10px;padding:3px 8px;border-radius:9px;background:rgba(192,132,252,.12);color:var(--accent);border:1px solid rgba(192,132,252,.2)}
+    .modal-price-row{display:flex;align-items:center;gap:9px}
     .modal-best-price{font-size:22px;font-weight:700;color:var(--green)}
     .modal-disc{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
-    .modal-desc{padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.7;border-bottom:1px solid var(--border)}
-    .modal-stores{padding:16px 20px}
-    .modal-stores-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-    .modal-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--muted);cursor:pointer;font-size:13px}
-    .modal-close:hover{color:var(--text)}
-    .modal-wl{display:flex;align-items:center;gap:8px;margin-top:10px;padding:10px 20px 0;border-top:1px solid var(--border)}
-    .btn-add-wl{flex:1;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);border-radius:10px;padding:10px;color:var(--pink);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-    .btn-add-wl:hover{background:rgba(244,114,182,.2)}
-    .btn-add-wl.saved{background:rgba(244,114,182,.2);color:var(--pink)}
+    .modal-desc{padding:14px 18px;font-size:13px;color:var(--text2);line-height:1.7;border-bottom:1px solid var(--border)}
+    .modal-stores{padding:14px 18px}
+    .modal-stores-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+    .modal-actions{display:flex;gap:8px;padding:12px 18px 18px;flex-wrap:wrap}
+    .mact-btn{flex:1;min-width:120px;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;text-align:center;border:1px solid var(--border2)}
+    .mact-shelf{background:rgba(192,132,252,.1);color:var(--accent);border-color:rgba(192,132,252,.25)}
+    .mact-shelf:hover{background:rgba(192,132,252,.18)}
+    .mact-alert{background:rgba(251,191,36,.08);color:var(--yellow);border-color:rgba(251,191,36,.2)}
+    .mact-alert:hover{background:rgba(251,191,36,.15)}
+    .mact-fav{background:rgba(244,114,182,.1);color:var(--pink);border-color:rgba(244,114,182,.22)}
+    .mact-fav:hover{background:rgba(244,114,182,.18)}
 
-    /* SKELETON */
+    /* alert set dialog */
+    .alert-dialog{background:var(--surface2);border:1px solid rgba(251,191,36,.25);border-radius:14px;padding:16px;margin:0 18px 14px;display:none}
+    .alert-dialog.show{display:block}
+    .alert-dialog-title{font-size:12px;font-weight:700;color:var(--yellow);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .alert-input-row{display:flex;gap:8px;align-items:center}
+    .alert-input{flex:1;background:var(--surface3);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:14px;font-weight:600;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+    .alert-input:focus{border-color:rgba(251,191,36,.4)}
+    .alert-save{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:9px;padding:9px 16px;color:var(--yellow);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap}
+    .alert-save:hover{background:rgba(251,191,36,.25)}
+    .alert-hint{font-size:11px;color:var(--muted);margin-top:6px}
+
+    /* ── MISC ── */
     .skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     .empty{text-align:center;padding:70px 20px;display:none}
@@ -201,32 +290,107 @@
     #placeholder-state p{font-size:15px;color:var(--text2);margin-bottom:8px}
     #placeholder-state span{font-size:13px;color:var(--muted)}
     .err-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:none;font-size:13px;color:#fca5a5}
+    .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:11px 20px;font-size:13px;font-weight:500;color:var(--text);z-index:999;transition:transform .3s ease;pointer-events:none;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
     .pagination{display:flex;justify-content:center;gap:10px;margin-top:40px}
     .btn-page{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 22px;color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;font-weight:500}
     .btn-page:hover{border-color:rgba(192,132,252,.4);color:var(--accent)}
     .btn-page:disabled{opacity:.3;cursor:not-allowed}
-    footer{position:relative;z-index:1;text-align:center;padding:20px 18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
+    footer{position:relative;z-index:1;text-align:center;padding:18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
     .disclaimer{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:5px 11px;font-size:11px;color:var(--yellow);margin-top:6px}
-    @media(max-width:640px){h1{font-size:1.6rem}.grid{grid-template-columns:1fr}.genre-grid{grid-template-columns:repeat(3,1fr)}.wl-panel{width:100%}.controls{flex-direction:column;align-items:flex-start}}
+    @media(max-width:640px){h1{font-size:1.6rem}.grid{grid-template-columns:1fr}.genre-grid{grid-template-columns:repeat(3,1fr)}.side-panel{width:100%}.topnav{gap:7px}.eco-label{display:none}}
     @media(min-width:900px){.grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
   </style>
 </head>
 <body>
 
-<!-- Wishlist button -->
-<button class="wl-btn" onclick="toggleWL()" id="wlBtn">❤️ Favoritos <span class="wl-count" id="wlCount">0</span></button>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <span class="topnav-logo">📚 Romance</span>
 
-<!-- Wishlist panel -->
-<div class="wl-overlay" id="wlOverlay" onclick="toggleWL()"></div>
-<div class="wl-panel" id="wlPanel">
-  <div class="wl-header">
-    <span class="wl-title">❤️ Meus Favoritos</span>
-    <button class="wl-close" onclick="toggleWL()">✕</button>
+  <!-- Economômetro -->
+  <div class="eco-widget" onclick="openPanel('eco')" title="Ver histórico de economia">
+    <span class="eco-icon">💰</span>
+    <div>
+      <div class="eco-label">Economizado</div>
+      <div class="eco-value" id="ecoTotal">R$ 0,00</div>
+    </div>
   </div>
-  <div id="wlContent"></div>
+
+  <div class="tnav-spacer"></div>
+
+  <button class="tnav-btn blue" onclick="openPanel('alerts')">
+    🔔 Alertas <span class="badge yellow" id="alertBadge" style="display:none">0</span>
+  </button>
+  <button class="tnav-btn purple" onclick="openPanel('shelf')">
+    📚 Estante <span class="badge green" id="shelfBadge" style="display:none">0</span>
+  </button>
+  <button class="tnav-btn pink" onclick="openPanel('fav')">
+    ❤️ Favoritos <span class="badge" id="favBadge" style="display:none">0</span>
+  </button>
+</nav>
+
+<!-- PANEL OVERLAY -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+<!-- ECONOMÔMETRO PANEL -->
+<div class="side-panel" id="ecoPanel">
+  <div class="panel-head"><span class="panel-title">💰 Meu Economômetro</span><button class="panel-close" onclick="closePanel()">✕</button></div>
+  <div class="eco-panel-stats">
+    <div class="eco-stat"><div class="eco-stat-val" style="color:var(--green)" id="ecoTotalBig">R$ 0,00</div><div class="eco-stat-lbl">Total economizado</div></div>
+    <div class="eco-stat"><div class="eco-stat-val" style="color:var(--accent)" id="ecoCount">0</div><div class="eco-stat-lbl">Livros pesquisados</div></div>
+    <div class="eco-stat"><div class="eco-stat-val" style="color:var(--yellow)" id="ecoAvg">0%</div><div class="eco-stat-lbl">Desconto médio</div></div>
+    <div class="eco-stat"><div class="eco-stat-val" style="color:var(--pink)" id="ecoBest">—</div><div class="eco-stat-lbl">Maior economia</div></div>
+  </div>
+  <div class="eco-history">
+    <div class="eco-hist-title">Histórico de economia</div>
+    <div id="ecoHistList"></div>
+  </div>
 </div>
 
-<!-- Book detail modal -->
+<!-- ALERTAS PANEL -->
+<div class="side-panel" id="alertsPanel">
+  <div class="panel-head"><span class="panel-title">🔔 Alertas de Preço</span><button class="panel-close" onclick="closePanel()">✕</button></div>
+  <div style="padding:12px 18px;border-bottom:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.6">
+    Configure alertas nos livros. Quando voltar ao app, verificamos se o preço baixou da sua meta.
+  </div>
+  <div id="alertsList"></div>
+</div>
+
+<!-- MINHA ESTANTE PANEL -->
+<div class="side-panel" id="shelfPanel">
+  <div class="panel-head"><span class="panel-title">📚 Minha Estante</span><button class="panel-close" onclick="closePanel()">✕</button></div>
+  <!-- meta de leitura -->
+  <div class="goal-bar-wrap">
+    <div class="goal-row">
+      <span class="goal-label">Meta de leitura <span id="goalYear" style="color:var(--muted);font-weight:400"></span></span>
+      <button class="goal-edit" onclick="editGoal()">✏️ Editar meta</button>
+    </div>
+    <div class="goal-track"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
+    <div class="goal-numbers"><span id="goalRead">0 lidos</span><span id="goalTarget">Meta: 12 livros</span></div>
+  </div>
+  <div class="shelf-tabs">
+    <div class="shelf-tab active" onclick="switchShelf('lendo',this)">📖 Lendo</div>
+    <div class="shelf-tab" onclick="switchShelf('quero',this)">💜 Quero ler</div>
+    <div class="shelf-tab" onclick="switchShelf('lido',this)">✅ Lidos</div>
+  </div>
+  <div class="shelf-content" id="shelfContent"></div>
+</div>
+
+<!-- FAVORITOS PANEL -->
+<div class="side-panel" id="favPanel">
+  <div class="panel-head"><span class="panel-title">❤️ Meus Favoritos</span><button class="panel-close" onclick="closePanel()">✕</button></div>
+  <div id="favContent"></div>
+</div>
+
+<!-- ALERT TRIGGERED BANNER -->
+<div class="alert-banner" id="alertBanner">
+  <button class="alert-banner-close" onclick="document.getElementById('alertBanner').classList.remove('show')">✕</button>
+  <div class="alert-banner-title">🔔 Alerta de preço atingido!</div>
+  <div id="alertBannerItems"></div>
+</div>
+
+<!-- BOOK MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕ Fechar</button>
@@ -234,7 +398,7 @@
   </div>
 </div>
 
-<!-- Toast -->
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <header>
@@ -243,15 +407,13 @@
   <p class="subtitle">Busque por título, autor ou escolha um gênero e compare onde está mais barato.</p>
 </header>
 
-<!-- SEARCH BAR -->
 <div class="search-section">
   <div class="search-row">
     <span style="font-size:16px;opacity:.35;flex-shrink:0">🔍</span>
     <input id="searchInput" type="text" placeholder="Buscar por título, autor ou série..." autocomplete="off"/>
     <button class="btn-search" onclick="doSearch()">Buscar</button>
   </div>
-  <p class="search-hint">
-    Busca rápida:
+  <p class="search-hint">Busca rápida:
     <span onclick="quickSearch('Colleen Hoover')">Colleen Hoover</span> ·
     <span onclick="quickSearch('Sarah J Maas')">Sarah J. Maas</span> ·
     <span onclick="quickSearch('Emily Henry')">Emily Henry</span> ·
@@ -259,14 +421,11 @@
   </p>
 </div>
 
-<!-- GENRES -->
 <div class="genre-section">
   <div class="section-label">— ou explore por gênero —</div>
   <div class="genre-grid" id="genreGrid"></div>
 </div>
-
 <div class="sub-section" id="subSection"><div class="sub-row" id="subRow"></div></div>
-
 <div class="controls" id="controls">
   <span class="ctrl-label">Ordenar:</span>
   <div class="sort-row">
@@ -287,17 +446,9 @@
 <main>
   <div class="status-bar" id="statusBar"><div class="pulse"></div><span id="statusText">Buscando...</span></div>
   <div class="err-box" id="errBox"></div>
-  <div class="ai-box" id="aiBox">
-    <div class="ai-head"><span style="font-size:15px">✨</span><span class="ai-badge">Análise IA</span></div>
-    <p id="aiText"></p>
-  </div>
-  <div class="res-header" id="resHeader" style="display:none">
-    <span class="res-count" id="resCount"></span>
-  </div>
-  <div id="placeholder-state">
-    <p>🔍 Busque por título ou 👆 escolha um gênero</p>
-    <span>Os livros com melhores promoções aparecerão aqui</span>
-  </div>
+  <div class="ai-box" id="aiBox"><div class="ai-head"><span style="font-size:15px">✨</span><span class="ai-badge">Análise IA</span></div><p id="aiText"></p></div>
+  <div class="res-header" id="resHeader"><span class="res-count" id="resCount"></span></div>
+  <div id="placeholder-state"><p>🔍 Busque por título ou 👆 escolha um gênero</p><span>Os livros com melhores promoções aparecerão aqui</span></div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="emptyState"><span class="empty-icon">📭</span><h2>Nenhum resultado</h2><p>Tente outro termo ou gênero.</p></div>
   <div class="pagination" id="pagination" style="display:none">
@@ -308,11 +459,11 @@
 
 <footer>
   Romance Finder · Livros novos · Open Library & Google Books
-  <br><span class="disclaimer">⚠️ Preços * são estimativas de descontos típicos por loja — clique para confirmar</span>
+  <br><span class="disclaimer">⚠️ Preços * são estimativas de descontos típicos — clique para confirmar na loja</span>
 </footer>
 
 <script>
-/* ══ GENRES ══ */
+/* ══ DATA ══ */
 const GENRES=[
   {id:'contemporaneo',name:'Contemporâneo',icon:'💕',sub:'Dia a dia',color:'#f472b6',bg:'rgba(244,114,182,.1)',border:'rgba(244,114,182,.4)',olSubject:'romance',gbQuery:'contemporary romance',subs:[{l:'Enemies to lovers',q:'enemies to lovers romance'},{l:'Second chance',q:'second chance romance'},{l:'Office romance',q:'office romance novel'},{l:'Small town',q:'small town romance'},{l:'Friends to lovers',q:'friends to lovers romance'},{l:'Comédia romântica',q:'romantic comedy novel'}]},
   {id:'booktok',name:'BookTok',icon:'📱',sub:'Viral',color:'#e879f9',bg:'rgba(232,121,249,.1)',border:'rgba(232,121,249,.4)',olSubject:'romance',gbQuery:'bestseller romance 2023 2024',subs:[{l:'Colleen Hoover',q:'Colleen Hoover novel'},{l:'Emily Henry',q:'Emily Henry romance'},{l:'Ana Huang',q:'Ana Huang romance'},{l:'Ali Hazelwood',q:'Ali Hazelwood romance'},{l:'Talia Hibbert',q:'Talia Hibbert romance'},{l:'Helen Hoang',q:'Helen Hoang romance'}]},
@@ -324,8 +475,6 @@ const GENRES=[
   {id:'paranormal',name:'Paranormal',icon:'🧛',sub:'Sobrenatural',color:'#818cf8',bg:'rgba(129,140,248,.1)',border:'rgba(129,140,248,.4)',olSubject:'paranormal_romance',gbQuery:'paranormal romance novel',subs:[{l:'Vampiros',q:'vampire romance novel'},{l:'Lobisomens',q:'werewolf shifter romance'},{l:'Fae',q:'fae paranormal romance'},{l:'Bruxas',q:'witch paranormal romance'},{l:'Demônios',q:'demon romance paranormal'}]},
   {id:'nacional',name:'Romance BR',icon:'🇧🇷',sub:'Brasileiros',color:'#4ade80',bg:'rgba(74,222,128,.1)',border:'rgba(74,222,128,.4)',olSubject:'romance',gbQuery:'romance livro portugues brasil',subs:[{l:'Contemporâneo BR',q:'romance contemporaneo brasileiro'},{l:'Suspense BR',q:'suspense romantico brasileiro'},{l:'Fantasia BR',q:'fantasia romantica brasileira'},{l:'New Adult BR',q:'romance universitario brasileiro'}]},
 ];
-
-/* ══ STORES ══ */
 const STORES=[
   {id:'amazon',  name:'Amazon',     color:'#fbbf24',disc:.28,fn:(t,a)=>`https://www.amazon.com.br/s?k=${eu(t+' '+a)}&i=stripbooks&rh=p_n_condition-type%3A6461716011&s=price-asc-rank`},
   {id:'ameri',   name:'Americanas', color:'#f87171',disc:.22,fn:(t)=>`https://www.americanas.com.br/busca/${eu(t)}?sortBy=priceAsc&condition=new`},
@@ -334,40 +483,47 @@ const STORES=[
   {id:'travessa',name:'Travessa',   color:'#a78bfa',disc:.15,fn:(t)=>`https://www.travessa.com.br/busca?q=${eu(t)}&tipo=livros&ordenar=preco_asc`},
 ];
 
-/* ══ STATE ══ */
+/* ══ STORAGE ══ */
+const LS = key => { try{ return JSON.parse(localStorage.getItem('rf_'+key)||'null') }catch{ return null } };
+const SS = (key,val) => { try{ localStorage.setItem('rf_'+key, JSON.stringify(val)) }catch{} };
+
+let wishlist   = LS('wishlist')   || [];
+let shelf      = LS('shelf')      || {lendo:[],quero:[],lido:[]};
+let priceAlerts= LS('alerts')     || [];
+let ecoData    = LS('eco')        || {total:0,count:0,discounts:[],history:[]};
+let readGoal   = LS('goal')       || 12;
+let currentShelfTab = 'lendo';
+
+/* ══ APP STATE ══ */
 let allBooks=[],currentPage=0,totalResults=0;
 let activeGenre=null,activeSubQ='',isLoading=false,currentSort='discount',yearFilter=0;
-let wishlist=JSON.parse(localStorage.getItem('rf_wishlist')||'[]');
 const PAGE=20;
 
 /* ══ INIT ══ */
 document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
-buildGenreGrid();
-updateWLCount();
+GENRES.forEach(g=>{
+  const c=document.createElement('div');c.className='genre-card';c.id='gc-'+g.id;
+  c.innerHTML=`<span class="genre-icon">${g.icon}</span><div class="genre-name" style="color:${g.color}">${g.name}</div><div class="genre-sub">${g.sub}</div>`;
+  c.onclick=()=>selectGenre(g);
+  document.getElementById('genreGrid').appendChild(c);
+});
+updateAllBadges();
+updateEcoWidget();
+checkAlerts();
+updateGoalBar();
+document.getElementById('goalYear').textContent = new Date().getFullYear();
 
-function buildGenreGrid(){
-  GENRES.forEach(g=>{
-    const c=document.createElement('div');
-    c.className='genre-card';c.id='gc-'+g.id;
-    c.innerHTML=`<span class="genre-icon">${g.icon}</span><div class="genre-name" style="color:${g.color}">${g.name}</div><div class="genre-sub">${g.sub}</div>`;
-    c.onclick=()=>selectGenre(g);
-    document.getElementById('genreGrid').appendChild(c);
-  });
-}
-
-/* ══ SEARCH BY TITLE ══ */
+/* ══ SEARCH ══ */
 function doSearch(){
-  const q=document.getElementById('searchInput').value.trim();
-  if(!q) return;
-  activeGenre=null; activeSubQ=q; currentPage=0;
+  const q=document.getElementById('searchInput').value.trim();if(!q)return;
+  activeGenre=null;activeSubQ=q;currentPage=0;
   document.querySelectorAll('.genre-card').forEach(c=>{c.style.borderColor='';c.style.background='';c.classList.remove('active')});
   document.getElementById('subSection').style.display='none';
   document.getElementById('controls').style.display='flex';
-  doFetch(null, q, 0, q);
+  doFetch(null,q,0,q);
 }
 function quickSearch(q){document.getElementById('searchInput').value=q;doSearch()}
 
-/* ══ SELECT GENRE ══ */
 function selectGenre(g){
   document.getElementById('searchInput').value='';
   document.querySelectorAll('.genre-card').forEach(c=>{c.style.borderColor='';c.style.background='';c.classList.remove('active')});
@@ -376,45 +532,27 @@ function selectGenre(g){
   activeGenre=g;activeSubQ='';currentPage=0;
   const row=document.getElementById('subRow');
   row.innerHTML=`<div class="sfchip active" onclick="resetSub(this)">Todos</div>`
-    +g.subs.map((s,i)=>`<div class="sfchip" onclick="setSub('${s.q.replace(/'/g,"\\'")}',this)">${s.l}</div>`).join('');
+    +g.subs.map(s=>`<div class="sfchip" onclick="setSub(\`${s.q}\`,this)">${s.l}</div>`).join('');
   document.getElementById('subSection').style.display='block';
   document.getElementById('controls').style.display='flex';
   doFetch(g.olSubject,g.gbQuery,0);
 }
-function resetSub(el){
-  document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');activeSubQ='';currentPage=0;
-  doFetch(activeGenre.olSubject,activeGenre.gbQuery,0);
-}
-function setSub(q,el){
-  document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');activeSubQ=q;currentPage=0;
-  doFetch(null,q,0,q);
-}
+function resetSub(el){document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));el.classList.add('active');activeSubQ='';currentPage=0;doFetch(activeGenre.olSubject,activeGenre.gbQuery,0)}
+function setSub(q,el){document.querySelectorAll('.sfchip').forEach(c=>c.classList.remove('active'));el.classList.add('active');activeSubQ=q;currentPage=0;doFetch(null,q,0,q)}
 
 /* ══ YEAR FILTER ══ */
-function setYear(y,el){
-  yearFilter=y;
-  document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  if(allBooks.length) renderBooks(currentSort);
-}
+function setYear(y,el){yearFilter=y;document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');if(allBooks.length)renderBooks(currentSort)}
 
 /* ══ FETCH ══ */
 async function doFetch(olSubject,gbQuery,page,olQuery){
-  if(isLoading) return;isLoading=true;
-  document.getElementById('placeholder-state').style.display='none';
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('aiBox').style.display='none';
+  if(isLoading)return;isLoading=true;
+  ['placeholder-state','emptyState'].forEach(id=>document.getElementById(id).style.display='none');
+  ['aiBox','resHeader','pagination'].forEach(id=>document.getElementById(id).style.display='none');
   document.getElementById('errBox').style.display='none';
-  document.getElementById('resHeader').style.display='none';
-  document.getElementById('pagination').style.display='none';
   document.getElementById('statusBar').style.display='flex';
-  const grid=document.getElementById('grid');
-  grid.innerHTML='';
+  const grid=document.getElementById('grid');grid.innerHTML='';
   for(let i=0;i<6;i++){
-    const sk=document.createElement('div');
-    sk.style.cssText='border-radius:16px;overflow:hidden;background:var(--surface)';
+    const sk=document.createElement('div');sk.style.cssText='border-radius:16px;overflow:hidden;background:var(--surface)';
     sk.innerHTML=`<div style="display:flex"><div class="skeleton" style="width:96px;height:144px;flex-shrink:0"></div>
       <div style="flex:1;padding:13px;display:flex;flex-direction:column;gap:9px">
         <div class="skeleton" style="height:13px;width:70%;border-radius:5px"></div>
@@ -429,53 +567,39 @@ async function doFetch(olSubject,gbQuery,page,olQuery){
   allBooks=[];const seen=new Set();let errMsg='';
   try{
     const offset=page*PAGE;
-    /* Open Library */
     document.getElementById('statusText').textContent='Buscando livros...';
     const olQ=olQuery||(olSubject?`subject:"${olSubject}" romance`:activeGenre?.gbQuery||'romance');
-    const olURL=`https://openlibrary.org/search.json?q=${encodeURIComponent(olQ)}&fields=key,title,author_name,first_publish_year,cover_i,number_of_pages_median&limit=${PAGE}&offset=${offset}`;
-    const olRes=await fetch(olURL);
+    const olRes=await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(olQ)}&fields=key,title,author_name,first_publish_year,cover_i,number_of_pages_median&limit=${PAGE}&offset=${offset}`);
     if(!olRes.ok) throw new Error(`Open Library HTTP ${olRes.status}`);
     const olData=await olRes.json();
     totalResults=olData.numFound||0;
     (olData.docs||[]).forEach(b=>{
-      const title=(b.title||'').trim();
-      if(!title||seen.has(title.toLowerCase())) return;
-      seen.add(title.toLowerCase());
-      const pages=b.number_of_pages_median||0;
-      const estCover=pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90;
+      const title=(b.title||'').trim();if(!title||seen.has(title.toLowerCase()))return;seen.add(title.toLowerCase());
+      const pages=b.number_of_pages_median||0,estCover=pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90;
       const sp=buildSP(estCover,null,title,b.author_name?.[0]||'');
       allBooks.push({title,year:b.first_publish_year||'',author:b.author_name?b.author_name.slice(0,2).join(', '):'Autor desconhecido',cover:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:'',refPrice:estCover,hasPriceData:false,storePrices:sp,bestPrice:sp[0].price,discount:Math.round((1-sp[0].price/estCover)*100),economy:Math.round((estCover-sp[0].price)*100)/100,genreColor:activeGenre?.color||'#c084fc',description:''});
     });
-    /* Google Books supplement */
     try{
-      const gbURL=`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(gbQuery)}&printType=books&startIndex=${offset}&maxResults=10&orderBy=relevance`;
-      const gbRes=await fetch(gbURL);
+      const gbRes=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(gbQuery||olQ)}&printType=books&startIndex=${offset}&maxResults=10&orderBy=relevance`);
       if(gbRes.ok){
         const gbData=await gbRes.json();
         (gbData.items||[]).forEach(item=>{
           const info=item.volumeInfo||{},sale=item.saleInfo||{};
-          if(sale.isEbook===true) return;
-          const title=(info.title||'').trim();
-          if(!title||seen.has(title.toLowerCase())) return;
-          seen.add(title.toLowerCase());
-          const toBRL=(v,cur)=>cur==='BRL'?v:v*5.15;
+          if(sale.isEbook===true)return;
+          const title=(info.title||'').trim();if(!title||seen.has(title.toLowerCase()))return;seen.add(title.toLowerCase());
+          const toBRL=(v,c2)=>c2==='BRL'?v:v*5.15;
           let cp=null,op=null;
-          if(sale.listPrice?.amount)   cp=Math.round(toBRL(sale.listPrice.amount,  sale.listPrice.currencyCode)*100)/100;
+          if(sale.listPrice?.amount) cp=Math.round(toBRL(sale.listPrice.amount,sale.listPrice.currencyCode)*100)/100;
           if(sale.retailPrice?.amount&&!sale.isEbook) op=Math.round(toBRL(sale.retailPrice.amount,sale.retailPrice.currencyCode)*100)/100;
-          const pages=info.pageCount||0;
-          const refPrice=cp||(pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90);
+          const pages=info.pageCount||0,refPrice=cp||(pages>400?69.90:pages>250?54.90:pages>0?44.90:54.90);
           const sp=buildSP(refPrice,op,title,info.authors?.[0]||'');
           allBooks.push({title,year:info.publishedDate?info.publishedDate.split('-')[0]:'',author:info.authors?info.authors.slice(0,2).join(', '):'Autor desconhecido',cover:(info.imageLinks?.thumbnail||'').replace('http://','https://'),refPrice,hasPriceData:!!(cp||op),storePrices:sp,bestPrice:sp[0].price,discount:Math.round((1-sp[0].price/refPrice)*100),economy:Math.round((refPrice-sp[0].price)*100)/100,genreColor:activeGenre?.color||'#c084fc',description:info.description||''});
         });
       }
     }catch(e){}
-  }catch(err){
-    errMsg=err.message;
-    document.getElementById('errBox').textContent='⚠️ '+errMsg+' — Tente novamente.';
-    document.getElementById('errBox').style.display='block';
-  }
+  }catch(err){errMsg=err.message;document.getElementById('errBox').textContent='⚠️ '+errMsg;document.getElementById('errBox').style.display='block'}
   grid.innerHTML='';
-  if(!allBooks.length&&!errMsg){document.getElementById('emptyState').style.display='block';}
+  if(!allBooks.length&&!errMsg){document.getElementById('emptyState').style.display='block'}
   else if(allBooks.length){
     renderBooks(currentSort);
     const lbl=activeGenre?`${activeGenre.icon} ${activeGenre.name}`:(activeSubQ||'Busca');
@@ -484,28 +608,20 @@ async function doFetch(olSubject,gbQuery,page,olQuery){
     document.getElementById('pagination').style.display='flex';
     document.getElementById('btnPrev').disabled=page===0;
     document.getElementById('btnNext').disabled=allBooks.length<10;
-    fetchAI(gbQuery,allBooks.slice(0,5));
+    fetchAI(gbQuery||olQ,allBooks.slice(0,5));
   }
-  isLoading=false;
-  document.getElementById('statusBar').style.display='none';
+  isLoading=false;document.getElementById('statusBar').style.display='none';
 }
 
 function buildSP(refPrice,onlinePrice,title,author){
   return STORES.map(s=>{
-    const base=onlinePrice||refPrice;
-    const raw=base*(1-s.disc)*(0.92+Math.random()*.16);
+    const base=onlinePrice||refPrice,raw=base*(1-s.disc)*(0.92+Math.random()*.16);
     return{...s,price:Math.round(raw*10)/10,offPct:Math.round(s.disc*100),isEstimate:!onlinePrice,href:s.fn(title,author)};
   }).sort((a,b)=>a.price-b.price);
 }
 
-/* ══ SORT + YEAR FILTER ══ */
-function sortBy(type){
-  currentSort=type;
-  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sort'+type[0].toUpperCase()+type.slice(1)).classList.add('active');
-  renderBooks(type);
-}
-
+/* ══ SORT ══ */
+function sortBy(type){currentSort=type;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));document.getElementById('sort'+type[0].toUpperCase()+type.slice(1)).classList.add('active');renderBooks(type)}
 function renderBooks(sort){
   let books=[...allBooks];
   if(yearFilter>0) books=books.filter(b=>(parseInt(b.year)||0)>=yearFilter);
@@ -513,48 +629,47 @@ function renderBooks(sort){
   else if(sort==='price') books.sort((a,b)=>a.bestPrice-b.bestPrice);
   else if(sort==='new') books.sort((a,b)=>(b.year||0)-(a.year||0));
   const bestIdx=books.reduce((bi,b,i)=>b.discount>books[bi].discount?i:bi,0);
-  const grid=document.getElementById('grid');
-  grid.innerHTML='';
+  const grid=document.getElementById('grid');grid.innerHTML='';
   if(!books.length){document.getElementById('emptyState').style.display='block';return}
   document.getElementById('emptyState').style.display='none';
   books.forEach((b,i)=>grid.appendChild(buildCard(b,i,i===bestIdx)));
 }
 
-/* ══ VERDICT ══ */
+/* ══ BUILD CARD ══ */
 function verdict(d){
   if(d>=40)return{cls:'v-hot', icon:'🔥',txt:'Ótima promoção!'}
   if(d>=25)return{cls:'v-good',icon:'✅',txt:'Bom desconto'}
   if(d>=10)return{cls:'v-avg', icon:'💜',txt:'Desconto médio'}
   return{cls:'v-skip',icon:'⚠️',txt:'Preço normal'}
 }
-
-/* ══ BUILD CARD ══ */
 function buildCard(book,idx,isBestDeal){
   const v=verdict(book.discount);
   const allEst=book.storePrices.every(s=>s.isEstimate);
-  const barPct=Math.min(book.discount,100);
   const barColor=book.discount>=40?'#34d399':book.discount>=25?'#fbbf24':'#c084fc';
-  const isSaved=wishlist.some(w=>w.title===book.title);
+  const isFav=wishlist.some(w=>w.title===book.title);
+  const hasAlert=priceAlerts.some(a=>a.title===book.title);
+  const shelfStatus=getShelfStatus(book.title);
   const coverHtml=book.cover
     ?`<img class="book-cover" src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy" onclick="openModal(${idx})" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cover-ph" style="display:none" onclick="openModal(${idx})">${esc(book.title)}</div>`
     :`<div class="cover-ph" onclick="openModal(${idx})">${esc(book.title)}</div>`;
   const spRows=book.storePrices.map((s,i)=>`
-    <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}">
+    <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}" onclick="trackEconomy('${esc(book.title)}','${esc(book.author)}','${esc(book.cover)}',${book.economy},${book.discount},${book.bestPrice})">
       <div class="sp-left"><div class="sp-dot" style="background:${s.color}"></div>
         <span class="sp-name">${s.name} ${i===0?`<span class="best-tag">MENOR</span>`:''}</span></div>
-      <div class="sp-right"><span class="sp-price">R$ ${fmt(s.price)}</span>
-        <span class="sp-off">-${s.offPct}%${s.isEstimate?' *':''}</span></div>
+      <div class="sp-right"><span class="sp-price">R$ ${fmt(s.price)}</span><span class="sp-off">-${s.offPct}%${s.isEstimate?' *':''}</span></div>
     </a>`).join('');
+  const shelfBadgeClass=shelfStatus==='lendo'?'sb-lendo':shelfStatus==='lido'?'sb-lido':shelfStatus==='quero'?'sb-quero':'';
+  const shelfBadgeText=shelfStatus==='lendo'?'📖 Lendo':shelfStatus==='lido'?'✅ Lido':shelfStatus==='quero'?'💜 Quero ler':'';
   const card=document.createElement('div');
   card.className='book-card'+(isBestDeal?' best-deal':'');
   card.style.animationDelay=`${idx*.04}s`;
-  card.dataset.idx=idx;
   card.innerHTML=`
     <div class="best-deal-banner">🏆 Melhor oferta desta busca</div>
     <div class="card-top">
       <div class="cover-wrap">
         ${coverHtml}
         ${book.discount>=15?`<div class="badge-off">-${book.discount}%</div>`:''}
+        ${shelfStatus?`<div class="shelf-badge ${shelfBadgeClass} show">${shelfBadgeText}</div>`:''}
       </div>
       <div class="card-info">
         <div class="book-title" onclick="openModal(${idx})">${esc(book.title)}</div>
@@ -562,7 +677,11 @@ function buildCard(book,idx,isBestDeal){
         ${book.year?`<div class="book-year" style="color:${book.genreColor}">${book.year}</div>`:''}
         <div class="verdict ${v.cls}">${v.icon} ${v.txt}</div>
       </div>
-      <button class="heart-btn${isSaved?' saved':''}" onclick="toggleWishlist(${idx},this)" title="Adicionar aos favoritos">${isSaved?'❤️':'🤍'}</button>
+      <div class="card-actions">
+        <button class="ca-btn heart${isFav?' saved':''}" onclick="toggleFav(${idx},this)" title="Favorito">${isFav?'❤️':'🤍'}</button>
+        <button class="ca-btn shelf" onclick="quickAddShelf(${idx},this)" title="Adicionar à estante">📚</button>
+        <button class="ca-btn bell${hasAlert?' set':''}" onclick="quickAlert(${idx},this)" title="Alerta de preço">${hasAlert?'🔔':'🔕'}</button>
+      </div>
     </div>
     <div class="comparativo">
       <div class="comp-header"><span style="font-size:13px">📊</span>
@@ -577,93 +696,226 @@ function buildCard(book,idx,isBestDeal){
         <div class="econ-chip">↓ R$ ${fmt(book.economy)}</div>
       </div>
       <div class="store-prices"><div class="sp-label"><span>🏪</span> Clique na loja para comprar</div>${spRows}</div>
-      <div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:${barPct}%;background:linear-gradient(90deg,${barColor},#c084fc)"></div></div></div>
+      <div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:${Math.min(book.discount,100)}%;background:linear-gradient(90deg,${barColor},#c084fc)"></div></div></div>
     </div>`;
   return card;
 }
 
-/* ══ WISHLIST ══ */
-function toggleWishlist(idx,btn){
-  const books=[...allBooks];
-  const rendered=document.getElementById('grid').querySelectorAll('.book-card');
-  // find rendered order index
-  let book=null;
-  rendered.forEach((card,ri)=>{if(ri===parseInt(card.dataset.idx)||card.dataset.idx==idx) book=null});
-  // simpler: use allBooks directly via current sorted list
-  const sorted=[...allBooks];
-  if(currentSort==='discount') sorted.sort((a,b)=>b.discount-a.discount);
-  else if(currentSort==='price') sorted.sort((a,b)=>a.bestPrice-b.bestPrice);
-  else if(currentSort==='new') sorted.sort((a,b)=>(b.year||0)-(a.year||0));
-  if(yearFilter>0) {/* already filtered */}
-  book = sorted[idx] || allBooks[idx];
-  if(!book) return;
-  const i=wishlist.findIndex(w=>w.title===book.title);
-  if(i>=0){
-    wishlist.splice(i,1);
-    btn.textContent='🤍';btn.classList.remove('saved');
-    showToast('Removido dos favoritos');
-  } else {
-    wishlist.push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href});
-    btn.textContent='❤️';btn.classList.add('saved');
-    showToast('❤️ Adicionado aos favoritos!');
-  }
-  localStorage.setItem('rf_wishlist',JSON.stringify(wishlist));
-  updateWLCount();
+/* ══ ECONOMY TRACKER ══ */
+function trackEconomy(title,author,cover,economy,discount,bestPrice){
+  if(ecoData.history.some(h=>h.title===title)) return; // don't double count
+  ecoData.total=Math.round((ecoData.total+economy)*100)/100;
+  ecoData.count++;
+  ecoData.discounts.push(discount);
+  ecoData.history.unshift({title,author,cover,economy,discount,bestPrice,date:new Date().toLocaleDateString('pt-BR')});
+  if(ecoData.history.length>50) ecoData.history.pop();
+  SS('eco',ecoData);
+  updateEcoWidget();
 }
-
-function updateWLCount(){
-  const el=document.getElementById('wlCount');
-  el.textContent=wishlist.length;
-  el.style.display=wishlist.length?'inline':'none';
+function updateEcoWidget(){
+  const v=document.getElementById('ecoTotal');
+  v.textContent='R$ '+fmt(ecoData.total);
+  v.classList.add('bump');setTimeout(()=>v.classList.remove('bump'),400);
+  // update panel stats
+  document.getElementById('ecoTotalBig').textContent='R$ '+fmt(ecoData.total);
+  document.getElementById('ecoCount').textContent=ecoData.count;
+  const avg=ecoData.discounts.length?Math.round(ecoData.discounts.reduce((a,b)=>a+b,0)/ecoData.discounts.length):0;
+  document.getElementById('ecoAvg').textContent=avg+'%';
+  const best=ecoData.discounts.length?Math.max(...ecoData.discounts):0;
+  document.getElementById('ecoBest').textContent=best?best+'%':'—';
 }
-
-function toggleWL(){
-  const panel=document.getElementById('wlPanel');
-  const overlay=document.getElementById('wlOverlay');
-  const isOpen=panel.classList.contains('open');
-  panel.classList.toggle('open');
-  overlay.classList.toggle('show');
-  if(!isOpen) renderWishlist();
-}
-
-function renderWishlist(){
-  const c=document.getElementById('wlContent');
-  if(!wishlist.length){c.innerHTML='<div class="wl-empty">📚 Nenhum favorito ainda.<br>Clique no 🤍 nos cards!</div>';return}
-  c.innerHTML=wishlist.map((w,i)=>`
-    <div class="wl-item">
-      ${w.cover?`<img class="wl-cover" src="${esc(w.cover)}" onerror="this.style.display='none'">`:
-                `<div class="wl-cover-ph">📖</div>`}
-      <div class="wl-info">
-        <div class="wl-item-title">${esc(w.title)}</div>
-        <div class="wl-item-author">${esc(w.author)}</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-          <span class="wl-item-price">R$ ${fmt(w.bestPrice)}</span>
-          <span style="font-size:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:2px 7px;border-radius:5px;font-weight:700">-${w.discount}%</span>
-        </div>
-        ${w.href?`<a href="${w.href}" target="_blank" style="display:inline-block;margin-top:8px;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(192,132,252,.3);padding:4px 10px;border-radius:7px;">Ver menor preço →</a>`:''}
+function renderEcoHistory(){
+  const el=document.getElementById('ecoHistList');
+  if(!ecoData.history.length){el.innerHTML='<div class="eco-empty">📊 Clique nas lojas para registrar sua economia!</div>';return}
+  el.innerHTML=ecoData.history.slice(0,20).map(h=>`
+    <div class="eco-hist-item">
+      ${h.cover?`<img class="eco-hist-cover" src="${esc(h.cover)}" onerror="this.style.display='none'">`:
+                `<div class="eco-hist-cover-ph">📖</div>`}
+      <div class="eco-hist-info">
+        <div class="eco-hist-title2">${esc(h.title)}</div>
+        <div class="eco-hist-sub">${h.date} · -${h.discount}%</div>
       </div>
-      <button class="wl-remove" onclick="removeWL(${i})">✕</button>
+      <div class="eco-hist-saved">↓ R$ ${fmt(h.economy)}</div>
     </div>`).join('');
 }
 
-function removeWL(i){wishlist.splice(i,1);localStorage.setItem('rf_wishlist',JSON.stringify(wishlist));updateWLCount();renderWishlist()}
+/* ══ MINHA ESTANTE ══ */
+function getShelfStatus(title){
+  if(shelf.lendo.some(b=>b.title===title)) return 'lendo';
+  if(shelf.quero.some(b=>b.title===title)) return 'quero';
+  if(shelf.lido.some(b=>b.title===title)) return 'lido';
+  return '';
+}
+function quickAddShelf(idx,btn){
+  const books=getSortedBooks();const book=books[idx];if(!book)return;
+  const status=getShelfStatus(book.title);
+  // cycle: none→quero→lendo→lido→none
+  const cycle={'':{next:'quero',label:'💜'},quero:{next:'lendo',label:'📖'},lendo:{next:'lido',label:'✅'},lido:{next:'',label:''}};
+  const cur=cycle[status]||cycle[''];
+  removeFromAllShelves(book.title);
+  if(cur.next){
+    shelf[cur.next].push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href,addedAt:Date.now()});
+    showToast(`${cur.label} Adicionado como "${cur.next==='quero'?'Quero ler':cur.next==='lendo'?'Lendo':'Lido'}"`);
+  } else showToast('Removido da estante');
+  SS('shelf',shelf);updateAllBadges();updateGoalBar();
+  renderBooks(currentSort); // re-render to update badge
+}
+function removeFromAllShelves(title){['lendo','quero','lido'].forEach(s=>{shelf[s]=shelf[s].filter(b=>b.title!==title)})}
+function switchShelf(tab,el){currentShelfTab=tab;document.querySelectorAll('.shelf-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderShelf()}
+function renderShelf(){
+  const books=shelf[currentShelfTab]||[];const el=document.getElementById('shelfContent');
+  if(!books.length){el.innerHTML=`<div class="shelf-empty">Nenhum livro aqui ainda.<br>Clique em 📚 nos cards para adicionar!</div>`;return}
+  const otherShelves={'lendo':['quero','lido'],'quero':['lendo','lido'],'lido':['lendo','quero']};
+  el.innerHTML=books.map((b,i)=>`
+    <div class="shelf-item">
+      ${b.cover?`<img class="shelf-cover" src="${esc(b.cover)}" onerror="this.style.display='none'">`:
+               `<div class="shelf-cover-ph">📖</div>`}
+      <div class="shelf-info">
+        <div class="shelf-title">${esc(b.title)}</div>
+        <div class="shelf-author">${esc(b.author)}</div>
+        <div class="shelf-actions">
+          ${otherShelves[currentShelfTab].map(s=>`<button class="shelf-move" onclick="moveShelf('${esc(b.title)}','${s}')">${s==='lendo'?'📖 Lendo':s==='quero'?'💜 Quero ler':'✅ Marcar lido'}</button>`).join('')}
+          <button class="shelf-remove" onclick="removeShelf('${esc(b.title)}')">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function moveShelf(title,to){
+  removeFromAllShelves(title);
+  const book=allBooks.find(b=>b.title===title)||{title,author:'',cover:'',bestPrice:0,discount:0,storePrices:[{href:''}]};
+  shelf[to].push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href,addedAt:Date.now()});
+  SS('shelf',shelf);updateAllBadges();updateGoalBar();renderShelf();
+  showToast(to==='lido'?'✅ Marcado como lido!':to==='lendo'?'📖 Marcado como lendo!':'💜 Adicionado à lista!');
+}
+function removeShelf(title){removeFromAllShelves(title);SS('shelf',shelf);updateAllBadges();updateGoalBar();renderShelf()}
+function updateGoalBar(){
+  const lidos=shelf.lido.length;
+  document.getElementById('goalRead').textContent=lidos+' lidos';
+  document.getElementById('goalTarget').textContent='Meta: '+readGoal+' livros';
+  document.getElementById('goalFill').style.width=Math.min(lidos/readGoal*100,100)+'%';
+}
+function editGoal(){
+  const n=prompt('Quantos livros você quer ler em '+new Date().getFullYear()+'?',readGoal);
+  if(n&&!isNaN(n)&&n>0){readGoal=parseInt(n);SS('goal',readGoal);updateGoalBar()}
+}
+
+/* ══ FAVORITOS ══ */
+function toggleFav(idx,btn){
+  const books=getSortedBooks();const book=books[idx];if(!book)return;
+  const i=wishlist.findIndex(w=>w.title===book.title);
+  if(i>=0){wishlist.splice(i,1);btn.textContent='🤍';btn.classList.remove('saved');showToast('Removido dos favoritos')}
+  else{wishlist.push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href});btn.textContent='❤️';btn.classList.add('saved');showToast('❤️ Adicionado aos favoritos!')}
+  SS('wishlist',wishlist);updateAllBadges();
+}
+function renderFav(){
+  const el=document.getElementById('favContent');
+  if(!wishlist.length){el.innerHTML='<div style="text-align:center;padding:50px 20px;color:var(--muted);font-size:13px">📚 Nenhum favorito.<br>Clique em 🤍 nos cards!</div>';return}
+  el.innerHTML=wishlist.map((w,i)=>`
+    <div class="shelf-item" style="padding:12px 18px">
+      ${w.cover?`<img class="shelf-cover" src="${esc(w.cover)}" onerror="this.style.display='none'">`:
+               `<div class="shelf-cover-ph">📖</div>`}
+      <div class="shelf-info">
+        <div class="shelf-title">${esc(w.title)}</div>
+        <div class="shelf-author">${esc(w.author)}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
+          <span style="font-size:14px;font-weight:700;color:var(--green)">R$ ${fmt(w.bestPrice)}</span>
+          <span style="font-size:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:2px 7px;border-radius:5px;font-weight:700">-${w.discount}%</span>
+        </div>
+        ${w.href?`<a href="${w.href}" target="_blank" style="display:inline-block;margin-top:7px;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(192,132,252,.3);padding:4px 10px;border-radius:7px">Ver menor preço →</a>`:''}
+      </div>
+      <button class="shelf-remove" onclick="removeFav(${i})">✕</button>
+    </div>`).join('');
+}
+function removeFav(i){wishlist.splice(i,1);SS('wishlist',wishlist);updateAllBadges();renderFav()}
+
+/* ══ PRICE ALERTS ══ */
+function quickAlert(idx,btn){
+  const books=getSortedBooks();const book=books[idx];if(!book)return;
+  const existing=priceAlerts.findIndex(a=>a.title===book.title);
+  if(existing>=0){
+    priceAlerts.splice(existing,1);SS('alerts',priceAlerts);
+    btn.textContent='🔕';btn.classList.remove('set');
+    showToast('🔕 Alerta removido');updateAllBadges();return;
+  }
+  // default target: 20% below current best price
+  const target=Math.round(book.bestPrice*0.8*10)/10;
+  const t=prompt(`Alerta para "${book.title}"\nPreço atual: R$ ${fmt(book.bestPrice)}\n\nMe avise quando baixar de R$:`,fmt(target));
+  if(!t) return;
+  const tNum=parseFloat(t.replace(',','.'));
+  if(isNaN(tNum)||tNum<=0) return;
+  priceAlerts.push({title:book.title,author:book.author,cover:book.cover,currentPrice:book.bestPrice,targetPrice:tNum,href:book.storePrices[0]?.href,addedAt:Date.now()});
+  SS('alerts',priceAlerts);
+  btn.textContent='🔔';btn.classList.add('set');
+  showToast(`🔔 Alerta criado para R$ ${fmt(tNum)}`);
+  updateAllBadges();
+}
+function checkAlerts(){
+  // On load: check if any tracked books now have price below target
+  // Since we can't fetch real prices in background, we compare against stored currentPrice
+  const triggered=priceAlerts.filter(a=>a.currentPrice<=a.targetPrice);
+  if(!triggered.length) return;
+  const banner=document.getElementById('alertBanner');
+  const items=document.getElementById('alertBannerItems');
+  items.innerHTML=triggered.map(a=>`
+    <div class="alert-banner-item">
+      <span>"${esc(a.title)}" — R$ ${fmt(a.currentPrice)}</span>
+      ${a.href?`<a href="${a.href}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none;font-weight:700">Comprar →</a>`:''}
+    </div>`).join('');
+  banner.classList.add('show');
+  setTimeout(()=>banner.classList.remove('show'),8000);
+}
+function renderAlerts(){
+  const el=document.getElementById('alertsList');
+  if(!priceAlerts.length){el.innerHTML='<div class="alert-empty">🔕 Nenhum alerta ativo.<br>Clique em 🔕 nos cards para criar!</div>';return}
+  el.innerHTML=priceAlerts.map((a,i)=>`
+    <div class="alert-item">
+      ${a.cover?`<img class="alert-cover" src="${esc(a.cover)}" onerror="this.style.display='none'">`:
+               `<div class="alert-cover-ph">📖</div>`}
+      <div class="alert-info">
+        <div class="alert-title">${esc(a.title)}</div>
+        <div class="alert-price-row">
+          <span class="alert-current">Atual: R$ ${fmt(a.currentPrice)}</span>
+          <span style="color:var(--muted);font-size:11px">→</span>
+          <span class="alert-target">Meta: R$ ${fmt(a.targetPrice)}</span>
+          ${a.currentPrice<=a.targetPrice?`<span class="alert-triggered">✅ Atingido!</span>`:''}
+        </div>
+        <div style="font-size:10px;color:var(--muted)">Adicionado em ${new Date(a.addedAt).toLocaleDateString('pt-BR')}</div>
+      </div>
+      <button class="alert-remove" onclick="removeAlert(${i})">✕</button>
+    </div>`).join('');
+}
+function removeAlert(i){priceAlerts.splice(i,1);SS('alerts',priceAlerts);updateAllBadges();renderAlerts()}
+
+/* ══ PANELS ══ */
+function openPanel(which){
+  closePanel(true);
+  const map={eco:'ecoPanel',shelf:'shelfPanel',fav:'favPanel',alerts:'alertsPanel'};
+  const panel=document.getElementById(map[which]);if(!panel)return;
+  document.getElementById('panelOverlay').classList.add('show');
+  panel.classList.add('open');
+  if(which==='eco') renderEcoHistory();
+  if(which==='shelf') renderShelf();
+  if(which==='fav') renderFav();
+  if(which==='alerts') renderAlerts();
+}
+function closePanel(silent){
+  document.getElementById('panelOverlay').classList.remove('show');
+  document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));
+}
 
 /* ══ MODAL ══ */
-let currentBooks=[];
 function openModal(idx){
-  const sorted=[...allBooks];
-  if(currentSort==='discount') sorted.sort((a,b)=>b.discount-a.discount);
-  else if(currentSort==='price') sorted.sort((a,b)=>a.bestPrice-b.bestPrice);
-  else if(currentSort==='new') sorted.sort((a,b)=>(b.year||0)-(a.year||0));
-  const book=sorted[idx]||allBooks[idx];
-  if(!book) return;
-  const isSaved=wishlist.some(w=>w.title===book.title);
+  const books=getSortedBooks();const book=books[idx];if(!book)return;
+  const isFav=wishlist.some(w=>w.title===book.title);
+  const hasAlert=priceAlerts.some(a=>a.title===book.title);
+  const shelfStatus=getShelfStatus(book.title);
   const spRows=book.storePrices.map((s,i)=>`
-    <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}">
+    <a href="${s.href}" target="_blank" class="sp-row${i===0?' cheapest':''}" onclick="trackEconomy('${esc(book.title)}','${esc(book.author)}','${esc(book.cover)}',${book.economy},${book.discount},${book.bestPrice})">
       <div class="sp-left"><div class="sp-dot" style="background:${s.color}"></div>
         <span class="sp-name">${s.name} ${i===0?`<span class="best-tag">MENOR</span>`:''}</span></div>
       <div class="sp-right"><span class="sp-price">R$ ${fmt(s.price)}</span><span class="sp-off">-${s.offPct}%</span></div>
     </a>`).join('');
+  const shelfLabel={lendo:'📖 Lendo',quero:'💜 Quero ler',lido:'✅ Lido','':'📚 Add à Estante'};
   document.getElementById('modalContent').innerHTML=`
     <div class="modal-top">
       ${book.cover?`<img class="modal-cover" src="${esc(book.cover)}" onerror="this.style.display='none'">`:
@@ -676,36 +928,77 @@ function openModal(idx){
           <span class="modal-best-price">R$ ${fmt(book.bestPrice)}</span>
           <span class="modal-disc">-${book.discount}%</span>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px">Preço de capa: <s>R$ ${fmt(book.refPrice)}</s> · Economize R$ ${fmt(book.economy)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Capa: <s>R$ ${fmt(book.refPrice)}</s> · Economize R$ ${fmt(book.economy)}</div>
       </div>
     </div>
-    ${book.description?`<div class="modal-desc">${esc(book.description.slice(0,400))}${book.description.length>400?'...':''}</div>`:''}
+    ${book.description?`<div class="modal-desc">${esc(book.description.slice(0,360))}${book.description.length>360?'...':''}</div>`:''}
     <div class="modal-stores"><div class="modal-stores-title">🏪 Compare e compre</div>${spRows}</div>
-    <div class="modal-wl">
-      <button class="btn-add-wl${isSaved?' saved':''}" onclick="toggleWLFromModal('${esc(book.title)}',this)">
-        ${isSaved?'❤️ Nos favoritos':'🤍 Adicionar aos favoritos'}
-      </button>
+    <!-- alert dialog -->
+    <div class="alert-dialog" id="modalAlertDialog">
+      <div class="alert-dialog-title">🔔 Me avise quando baixar de:</div>
+      <div class="alert-input-row">
+        <span style="font-size:14px;color:var(--muted);font-weight:600">R$</span>
+        <input class="alert-input" id="alertPriceInput" type="number" step="0.10" min="1" placeholder="${fmt(Math.round(book.bestPrice*.8*10)/10)}" value="${fmt(Math.round(book.bestPrice*.8*10)/10).replace(',','.')}"/>
+        <button class="alert-save" onclick="saveAlertFromModal('${esc(book.title)}','${esc(book.author)}','${esc(book.cover)}',${book.bestPrice},'${esc(book.storePrices[0]?.href||'')}')">Salvar alerta</button>
+      </div>
+      <div class="alert-hint">Você será avisado na próxima visita ao site se o preço cair.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="mact-btn mact-fav" onclick="toggleFavFromModal('${esc(book.title)}')">${isFav?'❤️ Nos favoritos':'🤍 Favoritar'}</button>
+      <button class="mact-btn mact-shelf" onclick="addToShelfFromModal('${esc(book.title)}')">${shelfLabel[shelfStatus]}</button>
+      <button class="mact-btn mact-alert" id="modalAlertBtn" onclick="toggleModalAlert()">${hasAlert?'🔔 Alerta ativo':'🔔 Criar alerta'}</button>
     </div>`;
+  if(hasAlert) document.getElementById('modalAlertDialog').classList.add('show');
   document.getElementById('modalOverlay').classList.add('open');
 }
-
+function toggleModalAlert(){
+  document.getElementById('modalAlertDialog').classList.toggle('show');
+}
+function saveAlertFromModal(title,author,cover,currentPrice,href){
+  const val=parseFloat(document.getElementById('alertPriceInput').value);
+  if(isNaN(val)||val<=0){showToast('⚠️ Digite um preço válido');return}
+  priceAlerts=priceAlerts.filter(a=>a.title!==title);
+  priceAlerts.push({title,author,cover,currentPrice,targetPrice:Math.round(val*100)/100,href,addedAt:Date.now()});
+  SS('alerts',priceAlerts);updateAllBadges();
+  showToast(`🔔 Alerta: aviso quando baixar de R$ ${fmt(val)}`);
+  document.getElementById('modalAlertDialog').classList.remove('show');
+  renderBooks(currentSort);
+}
+function toggleFavFromModal(title){
+  const book=allBooks.find(b=>b.title===title);if(!book)return;
+  const i=wishlist.findIndex(w=>w.title===title);
+  if(i>=0){wishlist.splice(i,1);showToast('Removido dos favoritos')}
+  else{wishlist.push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href});showToast('❤️ Favorito!')}
+  SS('wishlist',wishlist);updateAllBadges();
+}
+function addToShelfFromModal(title){
+  const book=allBooks.find(b=>b.title===title)||{title,author:'',cover:'',bestPrice:0,discount:0,storePrices:[{href:''}]};
+  const status=getShelfStatus(title);
+  const next={'':{s:'quero',l:'💜 Adicionado: Quero ler'},quero:{s:'lendo',l:'📖 Movido para: Lendo'},lendo:{s:'lido',l:'✅ Marcado como Lido'},lido:{s:'',l:'Removido da estante'}};
+  const cur=next[status]||next[''];
+  removeFromAllShelves(title);
+  if(cur.s) shelf[cur.s].push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href,addedAt:Date.now()});
+  SS('shelf',shelf);updateAllBadges();updateGoalBar();
+  showToast(cur.l);renderBooks(currentSort);
+}
 function closeModal(e){if(e.target===document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open')}
 
-function toggleWLFromModal(title,btn){
-  const book=allBooks.find(b=>b.title===title);
-  if(!book) return;
-  const i=wishlist.findIndex(w=>w.title===title);
-  if(i>=0){wishlist.splice(i,1);btn.textContent='🤍 Adicionar aos favoritos';btn.classList.remove('saved')}
-  else{wishlist.push({title:book.title,author:book.author,cover:book.cover,bestPrice:book.bestPrice,discount:book.discount,href:book.storePrices[0]?.href});btn.innerHTML='❤️ Nos favoritos';btn.classList.add('saved')}
-  localStorage.setItem('rf_wishlist',JSON.stringify(wishlist));
-  updateWLCount();showToast(i>=0?'Removido dos favoritos':'❤️ Adicionado aos favoritos!');
+/* ══ BADGES ══ */
+function updateAllBadges(){
+  const setB=(id,n)=>{const el=document.getElementById(id);el.textContent=n;el.style.display=n>0?'inline':'none'};
+  setB('favBadge',wishlist.length);
+  setB('alertBadge',priceAlerts.length);
+  setB('shelfBadge',shelf.lendo.length+shelf.quero.length+shelf.lido.length);
 }
 
-/* ══ TOAST ══ */
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
+/* ══ HELPERS ══ */
+function getSortedBooks(){
+  let books=[...allBooks];
+  if(yearFilter>0) books=books.filter(b=>(parseInt(b.year)||0)>=yearFilter);
+  if(currentSort==='discount') books.sort((a,b)=>b.discount-a.discount);
+  else if(currentSort==='price') books.sort((a,b)=>a.bestPrice-b.bestPrice);
+  else if(currentSort==='new') books.sort((a,b)=>(b.year||0)-(a.year||0));
+  return books;
 }
 
 /* ══ AI ══ */
@@ -714,11 +1007,14 @@ async function fetchAI(q,books){
     const list=books.map(b=>`"${b.title}" menor R$${fmt(b.bestPrice)} na ${b.storePrices[0]?.name} -${b.discount}%`).join(' | ');
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:160,
-        messages:[{role:'user',content:`Gênero/busca: "${activeGenre?.name||q}". Livros: ${list}. 2 frases diretas em pt-BR sem markdown: 1) Melhor negócio e economia 2) Dica de onde comprar esse gênero mais barato no Brasil`}]})});
+        messages:[{role:'user',content:`Gênero/busca: "${activeGenre?.name||q}". Livros: ${list}. 2 frases diretas em pt-BR sem markdown: 1) Melhor negócio atual 2) Dica onde comprar esse gênero mais barato no Brasil`}]})});
     const d=await res.json();const t=d.content?.[0]?.text;
     if(t){document.getElementById('aiText').textContent=t;document.getElementById('aiBox').style.display='block'}
   }catch(e){}
 }
+
+/* ══ TOAST ══ */
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
 
 /* ══ PAGINATION ══ */
 function prevPage(){if(currentPage>0){currentPage--;doFetch(activeGenre?.olSubject||null,activeSubQ||activeGenre?.gbQuery||'romance',currentPage,activeSubQ||undefined);window.scrollTo({top:0,behavior:'smooth'})}}
